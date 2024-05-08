@@ -12,22 +12,21 @@ describe("NFTune", function () {
     let [owner, otherAccount] = await hre.ethers.getSigners();
     const ownerAddress = await owner.getAddress();
     const AccessManager = await ethers.getContractFactory("AccessManager");
-    const access_manager = await AccessManager.deploy(ownerAddress);
-    console.log(access_manager);
+    const manager = await AccessManager.deploy(ownerAddress);
 
-    // const AccessManager = await ethers.getContractFactory("AccessManager");
-    // const access_manager = await upgrades.deployProxy(AccessManager, [
-    //   ownerAddress,
-    // ]);
-
-    return { access_manager, owner, otherAccount };
+    return { manager, owner, otherAccount };
   }
 
   describe("Deployment", function () {
     it("Should initialize properly", async function () {
-      const { access_manager, owner, otherAccount } = await loadFixture(
+      const { manager, owner, otherAccount } = await loadFixture(
         deployAccessManager
       );
+      await manager.grantRole(2n, otherAccount.address, 0);
+      await manager.getAccess(2n, otherAccount.address);
+      await manager.labelRole(2n, "ARTIST");
+      const artist = await manager.getRoleAdmin(2n);
+      console.log("admin", artist);
     });
   });
 });
