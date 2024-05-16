@@ -31,7 +31,6 @@ export default function Home() {
               </Link>
             </Stack>
           </div>
-
           <ThirdwebResources />
         </div>
       </main>
