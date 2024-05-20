@@ -56,9 +56,9 @@ function ArticleCard() {
   return (
     <div className="text-center flex flex-col border border-zinc-800 rounded-lg hover:bg-zinc-900 transition-colors hover:border-zinc-700 p-6">
       <a href="">
-        <h1 className="text-lg font-semibold mb-2 p-6">NFTunes Prenium</h1>
+        <h1 className="text-lg font-semibold mb-2 p-6">NFTunes Premium</h1>
 
-        <h2 className="text-sm text-zinc-400">Subscribe to NFTunes Prenium</h2>
+        <h2 className="text-sm text-zinc-400">Subscribe to NFTunes Premium</h2>
         <br />
         <h1 className="text-lg font-semibold mb-2">5$/month</h1>
       </a>
