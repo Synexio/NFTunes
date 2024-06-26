@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import logo from "@public/logo.png";
+import Navbar from "../components/Navbar";
 import { client } from "../client";
 import { Button, Stack } from "@mui/material";
 import { Link } from "../../../navigation";

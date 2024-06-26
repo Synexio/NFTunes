@@ -1,0 +1,24 @@
+/* Add this inside your App.css or a separate stylesheet */
+
+/* Hamburger button styling */
+nav button {
+  display: none;
+  /* Add more styling for your button here */
+}
+
+/* Style adjustments for smaller screens */
+@media (max-width: 768px) {
+  nav a {
+    display: none;
+  }
+
+  nav button {
+    display: block;
+  }
+
+  /* If the menu is open, we'll display the links */
+  .isOpen a {
+    display: block;
+  }
+}
+
