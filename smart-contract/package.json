@@ -1,8 +1,12 @@
 {
   "name": "smart-contract",
   "version": "1.0.0",
-  "description": "",
+  "description": "**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**",
   "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +14,8 @@
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
+    "@nomicfoundation/hardhat-ethers": "^3.0.6",
+    "@nomicfoundation/hardhat-foundry": "^1.1.2",
     "@nomicfoundation/hardhat-ignition": "^0.15.5",
     "@nomicfoundation/hardhat-ignition-ethers": "^0.15.5",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
@@ -22,15 +28,16 @@
     "@types/mocha": "^10.0.7",
     "chai": "^4.4.1",
     "ethers": "^6.13.1",
-    "hardhat": "^2.22.5",
+    "hardhat": "^2.22.6",
     "hardhat-gas-reporter": "^1.0.10",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-ethers": "^3.0.6",
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@openzeppelin/contracts": "^5.0.2"
+    "@api3/contracts": "^5.1.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "typescript": "^5.5.3"
   }
 }
