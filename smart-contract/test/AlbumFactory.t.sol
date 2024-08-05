@@ -27,11 +27,14 @@ contract AlbumFactoryTest is Test {
     }
 
     function testCreateAlbum() public {
+        vm.startPrank(admin);
+        instance.hasRole(instance.ARTIST_ROLE(), artist);
+        vm.stopPrank();
         vm.startPrank(artist);
-        instance.createAlbum().
+        instance.createAlbum();
         // assertEq(instance.tokenURI(0), tokenURI); 
         // forge test -vv to see logs
-        console.log(instance);
+        console.log(address(instance));
         vm.stopPrank();
     }
     

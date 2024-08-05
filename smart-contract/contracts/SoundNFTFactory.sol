@@ -17,7 +17,7 @@ contract SoundNFTFactory is UUPSUpgradeable, AccessControlUpgradeable{
     address[] public deployedAlbums;
 
     function initialize() public initializer {
-        _setupRole(ARTIST_ROLE, msg.sender);
+        _grantRole(ARTIST_ROLE, msg.sender);
         // _setupRole(ADMIN_ROLE, msg.sender);
         // Definir une adresse admin
         __UUPSUpgradeable_init();
@@ -25,7 +25,7 @@ contract SoundNFTFactory is UUPSUpgradeable, AccessControlUpgradeable{
 
     function createAlbum(
         // string memory name, string memory symbol, address admin, address artist
-        ) public onlyRole(ARTIST_ROLE) returns (address){
+        ) public returns (address){
         address newAlbum = address(new SoundNFT());
         deployedAlbums.push(newAlbum);
         return newAlbum;
