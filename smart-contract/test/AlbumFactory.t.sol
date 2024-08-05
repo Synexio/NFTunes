@@ -20,23 +20,23 @@ contract AlbumFactoryTest is Test {
         // create a random recipient address
         artist = makeAddr("artist");
         admin = makeAddr("admin");
+    instance = new SoundNFTFactory();
+        instance.initialize(admin);
+
+        vm.prank(admin);
+        instance.grantRole(instance.ARTIST_ROLE(), artist);
     }
+
     function testInitialize() public {
-        instance.initialize();
-        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), address(this)));
+        instance.initialize(admin);
+        assertTrue(instance.hasRole(instance.ADMIN_ROLE(), admin));
     }
 
     function testCreateAlbum() public {
-        vm.startPrank(admin);
-        instance.hasRole(instance.ARTIST_ROLE(), artist);
-        vm.stopPrank();
         vm.startPrank(artist);
-        instance.createAlbum();
-        // assertEq(instance.tokenURI(0), tokenURI); 
-        // forge test -vv to see logs
+        instance.createAlbum("AlbumName", "ALB", artist);
         console.log(address(instance));
         vm.stopPrank();
     }
-    
 
 }
