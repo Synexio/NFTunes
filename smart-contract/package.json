@@ -28,7 +28,7 @@
     "@types/mocha": "^10.0.7",
     "chai": "^4.4.1",
     "ethers": "^6.13.1",
-    "hardhat": "^2.22.6",
+    "hardhat": "^2.22.7",
     "hardhat-gas-reporter": "^1.0.10",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",
@@ -38,6 +38,7 @@
     "@api3/contracts": "^5.1.0",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "@openzeppelin/hardhat-upgrades": "^3.2.1",
     "typescript": "^5.5.3"
   }
 }
