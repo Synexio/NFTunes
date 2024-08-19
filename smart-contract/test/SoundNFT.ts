@@ -14,19 +14,25 @@ describe("SoundNFT", function () {
     return { soundNFT, admin, artist, addr1, addr2 };
   }
   it("should return nft's name", async function () {
-    const { soundNFT, admin } = await loadFixture(deployNFTuneContract);
+    const { soundNFT } = await loadFixture(deployNFTuneContract);
 
     await soundNFT.waitForDeployment();
     console.log(await soundNFT.name());
     expect(await soundNFT.name()).to.equal("SoundNFT");
   });
   it("should mint nft", async function () {
-    const { soundNFT, admin, artist } = await loadFixture(deployNFTuneContract);
+    const { soundNFT, artist } = await loadFixture(deployNFTuneContract);
     await soundNFT
       .connect(artist)
       .safeMint(artist.address, `ipfs://tokenUri${0}`);
     soundNFT.connect(artist);
     expect(await soundNFT.balanceOf(artist.address)).to.equal(1);
     expect(await soundNFT.tokenURI(0)).to.equal(`ipfs://tokenUri${0}`);
+  });
+  it("should not mint", async function () {
+    const { soundNFT, addr1 } = await loadFixture(deployNFTuneContract);
+    await expect(
+      soundNFT.connect(addr1).safeMint(addr1.address, `ipfs://tokenUri${0}`)
+    ).to.be.reverted;
   });
 });
