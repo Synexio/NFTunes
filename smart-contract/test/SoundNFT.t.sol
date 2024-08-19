@@ -7,8 +7,8 @@ import {SoundNFT} from "../contracts/SoundNFT.sol";
 
 contract SoundNFTTest is Test {
 
-    bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
 
     SoundNFT instance;
     address admin;

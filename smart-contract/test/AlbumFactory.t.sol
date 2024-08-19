@@ -17,7 +17,7 @@ contract AlbumFactoryTest is Test {
 
     // Create a new instance of the contract, declare owner and random recipient
     function setUp() public {
-        instance = new SoundNFTFactory();
+        instance = new AlbumFactory();
         // create a random recipient address
         artist = makeAddr("artist");
         admin = makeAddr("admin");

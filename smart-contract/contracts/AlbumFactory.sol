@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract SoundNFTFactory is UUPSUpgradeable, AccessControlUpgradeable{
+contract AlbumFactory is UUPSUpgradeable, AccessControlUpgradeable{
 
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
@@ -16,10 +16,9 @@ contract SoundNFTFactory is UUPSUpgradeable, AccessControlUpgradeable{
 
     address[] public deployedAlbums;
 
-    function initialize(address artist, address admin) public initializer {
-        _grantRole(ARTIST_ROLE, artist);
+    function initialize(address admin, address artist) public initializer {
         _grantRole(ADMIN_ROLE, admin);
-        // Definir une adresse admin
+        _grantRole(ARTIST_ROLE, artist);
         __UUPSUpgradeable_init();
     }
 

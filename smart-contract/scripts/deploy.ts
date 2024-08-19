@@ -1,31 +1,47 @@
-import {ethers, run } from "hardhat";
+import { ethers, upgrades, network } from "hardhat";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-async function main(){
-    // The old way of deploying contracts
-    // const PriceFeed = await ethers.getContractFactory("PriceFeed");
-    // const pricefeed = await PriceFeed.deploy();
-    // await pricefeed.waitForDeployment();
-
-    //The new way of deploying contracts    Name of contract, Contructor Arguments, Overrides
-    const pricefeed = await ethers.deployContract("PriceFeed", [], ());
-
-    await pricefeed.waitForDeployment();
-
-    console.log(`PriceFeed contract address : ${pricefeed.target}`)
-    console.log("Verifying contract...");
-
-    // Wait for a few confirmations before verifying
-    await new Promise(resolve => setTimeout{resolve, 60000});
-
-    // Verifying contract
-    await run("verify:verify", {
-        address : pricefeed.target,
-        constructorArguments: [],
-    });
+async function main() {
+  // Deploy proxy contract
+  // const SoundNFT = await ethers.getContractFactory("SoundNFT");
+  // console.log("Deploying SoundNFT to", network.name);
+  // const soundNFT = await upgrades.deployProxy(
+  //   SoundNFT,
+  //   [process.env.ADMIN_ADDRESS, process.env.ARTIST_ADDRESS, "SoundNFT", "SNFT"],
+  //   {
+  //     initializer: "initialize",
+  //   }
+  // );
+  // await soundNFT.waitForDeployment();
+  // console.log("SoundNFT deployed to:", await soundNFT.getAddress);
+  const AlbumFactory = await ethers.getContractFactory("AlbumFactory");
+  console.log("Deploying AlbumFactory to", network.name);
+  const albumFactory = await upgrades.deployProxy(
+    AlbumFactory,
+    [process.env.ADMIN_ADDRESS, process.env.ARTIST_ADDRESS],
+    {
+      initializer: "initialize",
+    }
+  );
+  await albumFactory.waitForDeployment();
+  console.log("AlbumFactory deployed to:", await albumFactory.getAddress());
+  const SoundToken = await ethers.getContractFactory("SoundToken");
+  console.log("Deploying SoundToken to", network.name);
+  const soundToken = await upgrades.deployProxy(
+    SoundToken,
+    [process.env.ADMIN_ADDRESS, process.env.ARTIST_ADDRESS],
+    {
+      initializer: "initialize",
+    }
+  );
+  await soundToken.waitForDeployment();
+  console.log("SoundToken deployed to:", await soundToken.getAddress());
 }
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors
-main().catch((error)=> {
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
     console.error(error);
-    process.exitCode = 1
-});
+    process.exit(1);
+  });
