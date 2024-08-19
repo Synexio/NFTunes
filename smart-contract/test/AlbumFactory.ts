@@ -21,6 +21,12 @@ describe("Album Factory", function () {
     const { soundFactory, owner, artist, admin } = await loadFixture(
       deployNFTFactoryContract
     );
+    const isArtist = await soundToken.hasRole(
+      ethers.keccak256(ethers.toUtf8Bytes("ARTIST_ROLE")),
+      artist.address
+    );
+    expect(isArtist).to.equal(true); // Ensure the artist has the role
+
     const tx = await soundFactory
       .connect(artist)
       .createAlbum("album1", "abl1", admin.address, artist.address);
