@@ -15,12 +15,20 @@ describe("SoundToken", function () {
   it("should mint nft", async function () {
     const { soundToken, admin } = await loadFixture(deployNFTuneContract);
     await soundToken.connect(admin).mint(admin.address, 100000);
-    soundToken.connect(admin);
     expect(await soundToken.balanceOf(admin.address)).to.equal(100000);
   });
   it("should not mint", async function () {
     const { soundToken, addr1 } = await loadFixture(deployNFTuneContract);
     await expect(soundToken.connect(addr1).mint(addr1.address, 1000)).to.be
       .reverted;
+  });
+  it("should burn token", async function () {
+    const { soundToken, admin } = await loadFixture(deployNFTuneContract);
+    await soundToken.connect(admin).mint(admin.address, 100000);
+    expect(await soundToken.balanceOf(admin.address)).to.equal(100000);
+
+    await soundToken.connect(admin).burn("0x0000000", 1000);
+    expect(await soundToken.balanceOf("0x0000000")).to.equal(1000);
+    expect(await soundToken.balanceOf(admin.address)).to.equal(100000 - 1000);
   });
 });
