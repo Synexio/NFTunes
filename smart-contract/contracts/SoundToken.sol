@@ -12,7 +12,7 @@ contract SoundToken is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    function initialize(address defaultAdmin)
+    function initialize(address defaultAdmin, address artist)
         initializer public
     {
         __ERC20_init("SOUND", "SND");
@@ -22,6 +22,7 @@ contract SoundToken is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable
 
         _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
         _grantRole(ADMIN_ROLE, defaultAdmin);
+        _grantRole(ARTIST_ROLE, artist);
     }
 
     function mint(address account, uint256 amount) public onlyRole(ADMIN_ROLE) {

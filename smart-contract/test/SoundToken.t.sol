@@ -22,18 +22,18 @@ contract SoundTokenTest is Test {
         admin = makeAddr("admin");
     }
     function testInitialize() public {
-        instance.initialize(admin);
+        instance.initialize(admin, artist);
         assertTrue(instance.hasRole(instance.ADMIN_ROLE(), admin));
     }
     function testAddRole() public{
-        instance.initialize(admin);
+        instance.initialize(admin, artist);
         vm.prank(admin);
         instance.grantRole(ARTIST_ROLE, artist);
         assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
     }
 
     function testMintSuccess() public {
-        instance.initialize(admin);
+        instance.initialize(admin, artist);
         vm.prank(admin);
 
         uint256 amount = 100000000;
