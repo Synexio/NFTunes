@@ -56,7 +56,9 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
         </ListItem>
         <ListItem>
           <ListItemIcon>
-            <HomeIcon sx={{ color: "white" }} />
+            <Link href="/home" passHref>
+              <HomeIcon sx={{ color: "white" }} />
+            </Link>
           </ListItemIcon>
           <ListItemText
             primary="Home"
@@ -64,9 +66,11 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
           />
         </ListItem>
 
-        <ListItem button onClick={() => setActivePage("search")}>
+        <ListItem onClick={() => setActivePage("search")}>
           <ListItemIcon>
+            {/* <Link href="/home/search" passHref> */}
             <SearchIcon sx={{ color: "#b3b3b3" }} />
+            {/* </Link> */}
           </ListItemIcon>
           <ListItemText
             primary="Search"

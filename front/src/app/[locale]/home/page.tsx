@@ -3,7 +3,7 @@ import { Box, Container, Grid } from "@mui/material";
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import MainContent from "../components/MainContent";
-import SearchPage from "../SearchPage";
+import SearchPage from "../components/SearchPage";
 import Footer from "../components/Footer";
 
 const Home = () => {
@@ -17,7 +17,11 @@ const Home = () => {
             <Sidebar setActivePage={setActivePage} />
           </Grid>
           <Grid item xs={12} md={9}>
-            {activePage === "home" ? <MainContent /> : <SearchPage />}
+            {activePage === "home" ? (
+              <MainContent />
+            ) : (
+              <SearchPage onBackToHome={() => setActivePage("home")} />
+            )}
           </Grid>
         </Grid>
       </Container>
