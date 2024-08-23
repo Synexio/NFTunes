@@ -11,11 +11,6 @@ const Home: React.FC = () => {
   return (
     <Layout>
       <MainContent />
-      {/* {activePage === "home" ? (
-        <MainContent /> // Show MainContent if activePage is "home"
-      ) : (
-        <SearchPage onBackToHome={() => setActivePage("home")} /> // Show SearchPage if activePage is "search"
-      )} */}
     </Layout>
   );
 };

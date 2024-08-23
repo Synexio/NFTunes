@@ -1,4 +1,3 @@
-// src/app/[locale]/player/[id]/page.tsx
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -6,12 +5,14 @@ import {
   CardContent,
   Typography,
   IconButton,
-  LinearProgress,
   Box,
+  Slider,
+  CardMedia,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import musicDatabase, { Song } from "../../song";
+import musicDatabase, { Song } from "../../data/song";
+import VolumeControl from "./VolumeControl"; // Adjust the path as necessary
 
 interface FullPlayerProps {
   params: {
@@ -28,6 +29,8 @@ const FullPlayer: React.FC<FullPlayerProps> = ({ params }) => {
   const [audioData, setAudioData] = useState<Song | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [volume, setVolume] = useState<number>(50); // Default volume
+  const [isMuted, setIsMuted] = useState<boolean>(false);
 
   // Fetch audio data from the music database
   const fetchAudioData = (audioId: string) => {
@@ -51,32 +54,55 @@ const FullPlayer: React.FC<FullPlayerProps> = ({ params }) => {
     if (audioRef.current) {
       const currentTime = audioRef.current.currentTime;
       const duration = audioRef.current.duration;
-      setCurrentTime(currentTime);
-      setDuration(duration);
-      setProgress((currentTime / duration) * 100);
+
+      if (!isNaN(duration) && duration > 0) {
+        setCurrentTime(currentTime);
+        setDuration(duration);
+        setProgress((currentTime / duration) * 100);
+      }
     }
   };
 
   const togglePlay = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent unwanted routing
+    event.stopPropagation();
     if (isPlaying) {
       audioRef.current?.pause();
     } else {
-      audioRef.current?.play();
+      audioRef.current
+        ?.play()
+        .catch((error) => console.log("Playback error:", error));
     }
     setIsPlaying(!isPlaying);
   };
 
   // Seek functionality
-  const handleSeek = (event: React.MouseEvent<HTMLDivElement>) => {
-    const seekBar = event.currentTarget;
-    const clickX = event.clientX - seekBar.getBoundingClientRect().left;
-    const percent = clickX / seekBar.clientWidth;
-    const newTime = percent * duration; // Calculate new time based on click position
-
+  const handleSeek = (event: Event, newValue: number | number[]) => {
+    const newTime = (newValue as number) * (duration / 100); // Calculate new time based on percentage
     if (audioRef.current) {
       audioRef.current.currentTime = newTime; // Set the audio's current time
       setCurrentTime(newTime); // Update current time in state
+      setProgress(newValue as number); // Update progress bar
+    }
+  };
+
+  // Handle volume change from VolumeControl
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : newVolume / 100; // Adjust volume if unmuted
+    }
+  };
+
+  // Mute/Unmute functionality
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      if (!isMuted) {
+        audioRef.current.volume = 0; // Mute the audio
+      } else {
+        audioRef.current.volume = volume / 100; // Restore volume
+      }
     }
   };
 
@@ -84,15 +110,18 @@ const FullPlayer: React.FC<FullPlayerProps> = ({ params }) => {
   useEffect(() => {
     const audio = audioRef.current;
     if (audio) {
+      audio.volume = volume / 100; // Set initial volume
       audio.addEventListener("timeupdate", handleTimeUpdate);
-      audio.addEventListener("loadedmetadata", handleTimeUpdate); // To set duration when metadata is loaded
+      audio.addEventListener("loadedmetadata", () => {
+        setDuration(audio.duration); // Update duration when metadata is loaded
+      });
     }
     return () => {
       if (audio) {
         audio.removeEventListener("timeupdate", handleTimeUpdate);
       }
     };
-  }, [audioRef]);
+  }, [audioRef, volume]);
 
   if (!audioData) {
     return <div>Loading...</div>; // Optional loading state
@@ -111,6 +140,21 @@ const FullPlayer: React.FC<FullPlayerProps> = ({ params }) => {
   return (
     <Box sx={{ padding: 2, textAlign: "center" }}>
       <Card>
+        <CardMedia
+          component="img"
+          image={
+            typeof audioData.image === "string"
+              ? audioData.image
+              : audioData.image.src
+          } // Handle imported images and URLs
+          alt={`${audioData.title} cover`}
+          sx={{
+            height: 200, // Set the desired height
+            width: 200, // Set the desired width
+            objectFit: "cover", // Cover the entire area
+            margin: "0 auto", // Center the image horizontally
+          }}
+        />
         <CardContent>
           <Typography variant="h5">{audioData.title}</Typography>
           <Typography variant="subtitle1">{audioData.artist}</Typography>
@@ -125,14 +169,24 @@ const FullPlayer: React.FC<FullPlayerProps> = ({ params }) => {
             )}
           </IconButton>
           <audio ref={audioRef} src={audioData.url} preload="metadata" />
-          <Box
-            sx={{ width: "100%", cursor: "pointer", marginTop: 2 }}
-            onClick={handleSeek}
-          >
-            <LinearProgress
-              variant="determinate"
+          <Box sx={{ width: "100%", marginTop: 2 }}>
+            <Slider
               value={progress}
-              sx={{ marginTop: 2 }}
+              onChange={handleSeek}
+              min={0}
+              max={100}
+              sx={{
+                color: "primary.main",
+                "& .MuiSlider-thumb": {
+                  height: 24,
+                  width: 24,
+                  backgroundColor: "white",
+                  border: "2px solid currentColor",
+                  "&:hover, &.Mui-focusVisible": {
+                    boxShadow: "inherit",
+                  },
+                },
+              }}
             />
             <Typography
               variant="caption"
@@ -141,6 +195,12 @@ const FullPlayer: React.FC<FullPlayerProps> = ({ params }) => {
               {formatTime(currentTime)} / {formatTime(duration)}
             </Typography>
           </Box>
+          <VolumeControl
+            volume={volume}
+            onVolumeChange={handleVolumeChange}
+            isMuted={isMuted}
+            onMuteToggle={toggleMute}
+          />
         </CardContent>
       </Card>
     </Box>

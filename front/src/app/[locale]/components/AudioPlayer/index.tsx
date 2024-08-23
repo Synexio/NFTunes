@@ -16,7 +16,7 @@ interface AudioPlayerProps {
   title: string;
   artist: string;
   id: number;
-  // image: string;
+  image: string;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -24,7 +24,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   title,
   artist,
   id,
-  // image,
+  image,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -58,7 +58,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <Card sx={{ width: 250, position: "relative", cursor: "pointer" }}>
-      <Link href={`/player/${id}`} passHref>
+      <Link href={`/play/${id}`} passHref>
         <CardContent>
           <Typography variant="subtitle1">{title}</Typography>
           <Typography variant="subtitle2">{artist}</Typography>

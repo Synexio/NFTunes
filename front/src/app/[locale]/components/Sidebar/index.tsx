@@ -1,7 +1,7 @@
-// src/components/Sidebar.tsx
 import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
 import logo from "@public/drawing.png";
 import Link from "next/link";
@@ -26,11 +26,11 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
       }}
     >
       {/* Spotify Logo */}
-      <Box sx={{ marginBottom: 4 }}>
-        <Link href="/home" passHref>
+      <Link href="/home" passHref>
+        <Box sx={{ marginBottom: 4 }}>
           <Image src={logo} alt="Spotify Logo" width={100} height={50} />
-        </Link>
-      </Box>
+        </Box>
+      </Link>
 
       {/* Navigation List */}
       <List>
@@ -45,30 +45,41 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
         </ListItem>
 
         {/* Home Link */}
-        <ListItem onClick={() => setActivePage("home")}>
-          <ListItemIcon>
-            <Link href="/home" passHref>
+        <Link href="/home" passHref>
+          <ListItem onClick={() => setActivePage("home")}>
+            <ListItemIcon>
               <HomeIcon sx={{ color: "white" }} />
-            </Link>
-          </ListItemIcon>
-          <ListItemText
-            primary="Home"
-            primaryTypographyProps={{ color: "white" }}
-          />
-        </ListItem>
+            </ListItemIcon>
+            <ListItemText
+              primary="Home"
+              primaryTypographyProps={{ color: "white" }}
+            />
+          </ListItem>
+        </Link>
 
         {/* Search Link */}
-        <ListItem>
-          <ListItemIcon>
-            <Link href="/search" passHref>
+        <Link href="/search" passHref>
+          <ListItem>
+            <ListItemIcon>
               <SearchIcon sx={{ color: "#b3b3b3" }} />
-            </Link>
-          </ListItemIcon>
-          <ListItemText
-            primary="Search"
-            primaryTypographyProps={{ color: "#b3b3b3" }}
-          />
-        </ListItem>
+            </ListItemIcon>
+            <ListItemText
+              primary="Search"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
+        <Link href="/subscription" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <FavoriteIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Subscribe"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
       </List>
     </Box>
   );
