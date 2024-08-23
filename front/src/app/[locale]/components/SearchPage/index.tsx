@@ -10,7 +10,7 @@ interface Song {
   title: string;
   url: string;
   artist: string;
-  image: string;
+  // image?: string;
 }
 
 interface SearchPageProps {
@@ -26,23 +26,23 @@ const SearchPage = ({ onBackToHome }: SearchPageProps) => {
     {
       id: 1,
       title: "Song One",
-      url: "/music/song1.mp3",
+      url: "http://streaming.tdiradio.com:8000/house.mp3",
       artist: "Artist One",
-      image: "/path/to/album1.jpg",
+      // image: "@public/logo.png",
     },
     {
       id: 2,
       title: "Song Two",
-      url: "/music/song2.mp3",
+      url: "https://pixabay.com/fr/music/beats-velvet-sky-lofi-ambient-231924/",
       artist: "Artist Two",
-      image: "/path/to/album2.jpg",
+      // image: "/path/to/album2.jpg",
     },
     {
       id: 3,
       title: "Another Song",
       url: "/music/song3.mp3",
       artist: "Artist Three",
-      image: "/path/to/album3.jpg",
+      // image: "/path/to/album3.jpg",
     },
   ];
 
@@ -105,7 +105,7 @@ const SearchPage = ({ onBackToHome }: SearchPageProps) => {
                     url={track.url}
                     title={track.title}
                     artist={track.artist}
-                    image={track.image}
+                    // image={track.image}
                   />
                 </Grid>
               ))}
