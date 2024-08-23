@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import Layout from "../components/Layout";
-import MainContent from "../components/MainContent";
+import SearchPage from "../components/SearchPage";
 // import SearchPage from "../search";
 
 const Home: React.FC = () => {
@@ -10,7 +10,7 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
-      <MainContent />
+      <SearchPage />
       {/* {activePage === "home" ? (
         <MainContent /> // Show MainContent if activePage is "home"
       ) : (

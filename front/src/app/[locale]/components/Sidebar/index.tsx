@@ -1,11 +1,5 @@
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+// src/components/Sidebar.tsx
+import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import Image from "next/image";
@@ -15,7 +9,7 @@ import { ConnectButton } from "thirdweb/react";
 import { client } from "../../client";
 
 interface SidebarProps {
-  setActivePage: (page: "home" | "search") => void;
+  setActivePage: (page: "home") => void;
 }
 
 const Sidebar = ({ setActivePage }: SidebarProps) => {
@@ -34,12 +28,7 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
       {/* Spotify Logo */}
       <Box sx={{ marginBottom: 4 }}>
         <Link href="/home" passHref>
-          <Image
-            src={logo} // replace with the path to your logo
-            alt="Spotify Logo"
-            width={100}
-            height={50}
-          />
+          <Image src={logo} alt="Spotify Logo" width={100} height={50} />
         </Link>
       </Box>
 
@@ -54,7 +43,9 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             }}
           />
         </ListItem>
-        <ListItem>
+
+        {/* Home Link */}
+        <ListItem onClick={() => setActivePage("home")}>
           <ListItemIcon>
             <Link href="/home" passHref>
               <HomeIcon sx={{ color: "white" }} />
@@ -66,11 +57,12 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
           />
         </ListItem>
 
-        <ListItem onClick={() => setActivePage("search")}>
+        {/* Search Link */}
+        <ListItem>
           <ListItemIcon>
-            {/* <Link href="/home/search" passHref> */}
-            <SearchIcon sx={{ color: "#b3b3b3" }} />
-            {/* </Link> */}
+            <Link href="/search" passHref>
+              <SearchIcon sx={{ color: "#b3b3b3" }} />
+            </Link>
           </ListItemIcon>
           <ListItemText
             primary="Search"

@@ -13,11 +13,7 @@ interface Song {
   // image?: string;
 }
 
-interface SearchPageProps {
-  onBackToHome: () => void;
-}
-
-const SearchPage = ({ onBackToHome }: SearchPageProps) => {
+const SearchPage = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Song[]>([]);
 
@@ -63,13 +59,6 @@ const SearchPage = ({ onBackToHome }: SearchPageProps) => {
   return (
     <>
       <Box sx={{ padding: 3 }}>
-        <Button
-          variant="contained"
-          onClick={onBackToHome}
-          sx={{ marginBottom: 2, backgroundColor: "#121212" }}
-        >
-          Back
-        </Button>
         <Typography variant="h4" gutterBottom sx={{ color: "white" }}>
           Search
         </Typography>
@@ -105,7 +94,7 @@ const SearchPage = ({ onBackToHome }: SearchPageProps) => {
                     url={track.url}
                     title={track.title}
                     artist={track.artist}
-                    // image={track.image}
+                    id={track.id} // image={track.image}
                   />
                 </Grid>
               ))}

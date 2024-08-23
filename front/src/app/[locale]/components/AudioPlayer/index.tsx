@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,26 +9,30 @@ import {
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import Link from "next/link";
 
 interface AudioPlayerProps {
   url: string;
   title: string;
   artist: string;
-  // image: string; // Uncomment if you want to use an image
+  id: number;
+  // image: string;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   url,
   title,
   artist,
-  // image, // Uncomment if you want to use an image
+  id,
+  // image,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(10); // 10-second timer
   const [progress, setProgress] = useState<number>(0);
 
-  const togglePlay = () => {
+  const togglePlay = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent the card click event
     if (isPlaying) {
       audioRef.current?.pause();
     } else {
@@ -52,51 +56,46 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }, 1000);
   };
 
-  useEffect(() => {
-    const percentage = ((10 - remainingTime) / 10) * 100;
-    setProgress(percentage);
-  }, [remainingTime]);
-
   return (
-    <Card sx={{ width: 250, position: "relative" }}>
-      {/* Uncomment if you want to use an image
-      <CardMedia
-        component="img"
-        image={image}
-        height="140"
-      /> */}
-      <CardContent>
-        <Typography variant="subtitle1">{title}</Typography>
-        <Typography variant="subtitle2">{artist}</Typography>
-      </CardContent>
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          borderRadius: "50%",
-          margin: 1,
-          padding: 1,
-        }}
-      >
-        <IconButton onClick={togglePlay} sx={{ color: "white" }}>
-          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-        </IconButton>
-      </Box>
-      <audio ref={audioRef} src={url} onEnded={() => setIsPlaying(false)} />
-
-      {/* Countdown Timer Visual */}
-      <Box sx={{ padding: 1 }}>
-        <LinearProgress variant="determinate" value={progress} />
-        <Typography
-          variant="caption"
-          sx={{ textAlign: "center", display: "block", marginTop: 1 }}
+    <Link href={`/player/${id}`} passHref>
+      <Card sx={{ width: 250, position: "relative", cursor: "pointer" }}>
+        <CardContent>
+          <Typography variant="subtitle1">{title}</Typography>
+          <Typography variant="subtitle2">{artist}</Typography>
+        </CardContent>
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            borderRadius: "50%",
+            margin: 1,
+            padding: 1,
+          }}
         >
-          {remainingTime} seconds left
-        </Typography>
-      </Box>
-    </Card>
+          <IconButton
+            onClick={togglePlay}
+            sx={{ color: "white" }}
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          </IconButton>
+        </Box>
+        <audio ref={audioRef} src={url} />
+
+        {/* Countdown Timer Visual */}
+        <Box sx={{ padding: 1 }}>
+          <LinearProgress variant="determinate" value={progress} />
+          <Typography
+            variant="caption"
+            sx={{ textAlign: "center", display: "block", marginTop: 1 }}
+          >
+            {remainingTime} seconds left
+          </Typography>
+        </Box>
+      </Card>
+    </Link>
   );
 };
 
