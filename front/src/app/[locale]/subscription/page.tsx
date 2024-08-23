@@ -3,7 +3,8 @@ import Image from "next/image";
 import { ConnectButton } from "thirdweb/react";
 import logo from "@public/logo.png";
 import { client } from "../client";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Header";
+import Footer from "../components/Footer";
 import { useActiveAccount } from "thirdweb/react";
 
 export default function Subscription() {
@@ -26,6 +27,7 @@ export default function Subscription() {
           <ArticleCard />
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
@@ -46,7 +48,8 @@ function Header() {
 
       <h1 className="text-2xl md:text-6xl font-semibold md:font-bold tracking-tighter mb-6 text-zinc-100">
         Welcome <span className="text-zinc-300 inline-block mx-1">to</span>
-        <br /><span className="inline-block -skew-x-6 text-blue-500">NFTunes</span>
+        <br />
+        <span className="inline-block -skew-x-6 text-blue-500">NFTunes</span>
       </h1>
     </header>
   );

@@ -1,0 +1,43 @@
+.navbar {
+  background-color: black;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.nav-link:hover {
+  color: #ccc;
+}
+
+.isOpen {
+  display: block;
+}
+
+.wallet-button {
+  margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+  .nav-link {
+    font-size: 14px;
+  }
+  .wallet-button {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-link {
+    font-size: 12px;
+  }
+  .wallet-button {
+    font-size: 10px;
+  }
+}
