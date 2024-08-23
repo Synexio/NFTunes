@@ -57,45 +57,45 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   return (
-    <Link href={`/player/${id}`} passHref>
-      <Card sx={{ width: 250, position: "relative", cursor: "pointer" }}>
+    <Card sx={{ width: 250, position: "relative", cursor: "pointer" }}>
+      <Link href={`/player/${id}`} passHref>
         <CardContent>
           <Typography variant="subtitle1">{title}</Typography>
           <Typography variant="subtitle2">{artist}</Typography>
         </CardContent>
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            borderRadius: "50%",
-            margin: 1,
-            padding: 1,
-          }}
+      </Link>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          borderRadius: "50%",
+          margin: 1,
+          padding: 1,
+        }}
+      >
+        <IconButton
+          onClick={togglePlay}
+          sx={{ color: "white" }}
+          aria-label={isPlaying ? "Pause" : "Play"}
         >
-          <IconButton
-            onClick={togglePlay}
-            sx={{ color: "white" }}
-            aria-label={isPlaying ? "Pause" : "Play"}
-          >
-            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-          </IconButton>
-        </Box>
-        <audio ref={audioRef} src={url} />
+          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+        </IconButton>
+      </Box>
+      <audio ref={audioRef} src={url} />
 
-        {/* Countdown Timer Visual */}
-        <Box sx={{ padding: 1 }}>
-          <LinearProgress variant="determinate" value={progress} />
-          <Typography
-            variant="caption"
-            sx={{ textAlign: "center", display: "block", marginTop: 1 }}
-          >
-            {remainingTime} seconds left
-          </Typography>
-        </Box>
-      </Card>
-    </Link>
+      {/* Countdown Timer Visual */}
+      <Box sx={{ padding: 1 }}>
+        <LinearProgress variant="determinate" value={progress} />
+        <Typography
+          variant="caption"
+          sx={{ textAlign: "center", display: "block", marginTop: 1 }}
+        >
+          {remainingTime} seconds left
+        </Typography>
+      </Box>
+    </Card>
   );
 };
 
