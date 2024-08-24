@@ -1,10 +1,10 @@
 // components/TrackInfo.tsx
-import { BsMusicNoteBeamed } from "react-icons/bs";
-import { useAudioPlayerContext } from "../../context/audio-player-context";
 import { Box, Typography } from "@mui/material";
+import { useAudioPlayerContext } from "../../context/audio-player-context";
 
 export const TrackInfo = () => {
-  const { currentTrack } = useAudioPlayerContext();
+  const { currentTrack, listeningPoints } = useAudioPlayerContext();
+  const points = listeningPoints[currentTrack.id] || 0;
 
   return (
     <Box display="flex" alignItems="center" gap={2}>
@@ -12,14 +12,12 @@ export const TrackInfo = () => {
         {currentTrack.thumbnail ? (
           <img
             className="w-full h-full object-cover"
-            src={currentTrack.thumbnail}
+            src={currentTrack.thumbnail as string}
             alt="audio avatar"
           />
         ) : (
           <Box className="flex items-center justify-center w-full h-full bg-gray-300 rounded-md">
-            <span className="text-xl text-gray-600">
-              <BsMusicNoteBeamed />
-            </span>
+            <span className="text-xl text-gray-600">🎵</span>
           </Box>
         )}
       </Box>
@@ -29,6 +27,9 @@ export const TrackInfo = () => {
         </Typography>
         <Typography variant="caption" color="textSecondary">
           {currentTrack.author}
+        </Typography>
+        <Typography variant="caption" color="textSecondary">
+          Listening Points: {points}
         </Typography>
       </Box>
     </Box>

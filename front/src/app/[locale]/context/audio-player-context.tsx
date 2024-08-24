@@ -1,6 +1,5 @@
-// context/audio-player-context.tsx
 "use client";
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { tracks } from "../data/tracks";
 
 interface AudioPlayerContextType {
@@ -16,6 +15,8 @@ interface AudioPlayerContextType {
   setTrackIndex: (index: number) => void;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
+  listeningPoints: { [id: number]: number };
+  setListeningPoints: (points: { [id: number]: number }) => void;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(
@@ -34,6 +35,28 @@ export const AudioPlayerProvider = ({
   const [timeProgress, setTimeProgress] = useState(0);
   const [trackIndex, setTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [listeningPoints, setListeningPoints] = useState<{
+    [id: number]: number;
+  }>({});
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setListeningPoints((prevPoints) => ({
+          ...prevPoints,
+          [currentTrack.id]: (prevPoints[currentTrack.id] || 0) + 1,
+        }));
+      }, 10000); // Adds a point every 10 seconds
+    } else if (interval) {
+      clearInterval(interval);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPlaying, currentTrack]);
 
   return (
     <AudioPlayerContext.Provider
@@ -50,6 +73,8 @@ export const AudioPlayerProvider = ({
         setTrackIndex,
         isPlaying,
         setIsPlaying,
+        listeningPoints,
+        setListeningPoints,
       }}
     >
       {children}
