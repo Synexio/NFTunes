@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
 import {SoundNFT} from "../contracts/SoundNFT.sol";
+import {Staff} from "../contracts/Staff.sol";
 
 contract SoundNFTTest is Test {
 
@@ -11,6 +12,7 @@ contract SoundNFTTest is Test {
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
 
     SoundNFT instance;
+    Staff staff;
     address admin;
     address artist;
 
@@ -20,9 +22,10 @@ contract SoundNFTTest is Test {
         // create a random recipient address
         artist = makeAddr("artist");
         admin = makeAddr("admin");
-    }
-    function testInitialize() public {
         instance.initialize(admin, artist, "Album", "ALB");
+
+    }
+    function testInitialize() public view {
         assertTrue(instance.hasRole(instance.ADMIN_ROLE(), admin));
         assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
         assertEq(instance.name(), "Album");
@@ -31,7 +34,6 @@ contract SoundNFTTest is Test {
 
     function testSafeMint() public {
         string memory tokenURI = "ipfs://CID";
-        instance.initialize(admin, artist,"Album1", "ALB1");
         vm.startPrank(artist);
         instance.safeMint(artist, tokenURI);
         assertEq(instance.tokenURI(0), tokenURI); 
@@ -39,13 +41,5 @@ contract SoundNFTTest is Test {
         console.log("Token Name: ", instance.name());
         vm.stopPrank();
     }
-    function testAddStaff() public {
-        instance.initialize(admin, artist,"Album1", "ALB1");
-        vm.startPrank(admin);
-        instance.addStaff(artist, "artist");
-        assertEq(instance.isStaff(artist), "artist");
-        vm.stopPrank();
-    }
-    
 
 }

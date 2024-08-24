@@ -21,23 +21,20 @@ contract AlbumFactoryTest is Test {
         // create a random recipient address
         artist = makeAddr("artist");
         admin = makeAddr("admin");
-    }
-    function testInitialize() public {
         instance.initialize(admin, artist);
+
+    }
+    function testInitialize() public view {
         assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
     }
 
     function testCreateAlbum() public {
-        instance.initialize(admin, artist);
-       
         vm.startPrank(artist);
         address newAlbum = instance.createAlbum("ether", "eth", admin, artist);
         // forge test -vv to see logs
         SoundNFT albumInstance = SoundNFT(newAlbum);
-
         assertEq(albumInstance.name(), "ether");
         assertEq(albumInstance.symbol(), "eth");
-
         vm.stopPrank();
     }
     
