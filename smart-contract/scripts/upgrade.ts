@@ -21,6 +21,16 @@ async function main() {
 
   await upgrades.upgradeProxy(deployedProxyAlbum as string, AlbumFactory);
   console.log("AlbumFactory contract upgraded");
+
+  //----------------------------------------------------------------
+
+  const deployedProxyStaff = process.env.PROXY_STAFF_ADDRESS;
+
+  const Staff = await ethers.getContractFactory("SoundToken");
+  console.log("Upgrading Staff...");
+
+  await upgrades.upgradeProxy(deployedProxyStaff as string, Staff);
+  console.log("Staff contract upgraded");
 }
 
 main()

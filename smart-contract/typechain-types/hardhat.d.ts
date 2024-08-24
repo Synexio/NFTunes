@@ -149,6 +149,10 @@ declare module "hardhat/types/runtime" {
       name: "SoundToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SoundToken__factory>;
+    getContractFactory(
+      name: "Staff",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Staff__factory>;
 
     getContractAt(
       name: "AccessControlUpgradeable",
@@ -320,6 +324,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.SoundToken>;
+    getContractAt(
+      name: "Staff",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Staff>;
 
     deployContract(
       name: "AccessControlUpgradeable",
@@ -457,6 +466,10 @@ declare module "hardhat/types/runtime" {
       name: "SoundToken",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SoundToken>;
+    deployContract(
+      name: "Staff",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Staff>;
 
     deployContract(
       name: "AccessControlUpgradeable",
@@ -628,6 +641,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SoundToken>;
+    deployContract(
+      name: "Staff",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Staff>;
 
     // default types
     getContractFactory(

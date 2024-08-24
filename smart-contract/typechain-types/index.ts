@@ -74,3 +74,5 @@ export type { SoundNFT } from "./contracts/SoundNFT";
 export { SoundNFT__factory } from "./factories/contracts/SoundNFT__factory";
 export type { SoundToken } from "./contracts/SoundToken";
 export { SoundToken__factory } from "./factories/contracts/SoundToken__factory";
+export type { Staff } from "./contracts/Staff";
+export { Staff__factory } from "./factories/contracts/Staff__factory";

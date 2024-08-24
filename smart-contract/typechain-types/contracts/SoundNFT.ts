@@ -30,6 +30,7 @@ export interface SoundNFTInterface extends Interface {
       | "ARTIST_ROLE"
       | "DEFAULT_ADMIN_ROLE"
       | "UPGRADE_INTERFACE_VERSION"
+      | "addStaff"
       | "approve"
       | "balanceOf"
       | "burn"
@@ -39,9 +40,11 @@ export interface SoundNFTInterface extends Interface {
       | "hasRole"
       | "initialize"
       | "isApprovedForAll"
+      | "isStaff"
       | "name"
       | "ownerOf"
       | "proxiableUUID"
+      | "removeStaff"
       | "renounceRole"
       | "revokeRole"
       | "safeMint"
@@ -86,6 +89,10 @@ export interface SoundNFTInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "addStaff",
+    values: [AddressLike, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
   ): string;
@@ -118,6 +125,10 @@ export interface SoundNFTInterface extends Interface {
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "isStaff",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
@@ -126,6 +137,10 @@ export interface SoundNFTInterface extends Interface {
   encodeFunctionData(
     functionFragment: "proxiableUUID",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeStaff",
+    values: [AddressLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -182,6 +197,7 @@ export interface SoundNFTInterface extends Interface {
     functionFragment: "UPGRADE_INTERFACE_VERSION",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "addStaff", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
@@ -200,10 +216,15 @@ export interface SoundNFTInterface extends Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isStaff", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "proxiableUUID",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeStaff",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -459,6 +480,12 @@ export interface SoundNFT extends BaseContract {
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
 
+  addStaff: TypedContractMethod<
+    [account: AddressLike, role: string],
+    [void],
+    "nonpayable"
+  >;
+
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -497,11 +524,19 @@ export interface SoundNFT extends BaseContract {
     "view"
   >;
 
+  isStaff: TypedContractMethod<[account: AddressLike], [string], "view">;
+
   name: TypedContractMethod<[], [string], "view">;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
   proxiableUUID: TypedContractMethod<[], [string], "view">;
+
+  removeStaff: TypedContractMethod<
+    [account: AddressLike, role: string],
+    [void],
+    "nonpayable"
+  >;
 
   renounceRole: TypedContractMethod<
     [role: BytesLike, callerConfirmation: AddressLike],
@@ -583,6 +618,13 @@ export interface SoundNFT extends BaseContract {
     nameOrSignature: "UPGRADE_INTERFACE_VERSION"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "addStaff"
+  ): TypedContractMethod<
+    [account: AddressLike, role: string],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
@@ -630,6 +672,9 @@ export interface SoundNFT extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "isStaff"
+  ): TypedContractMethod<[account: AddressLike], [string], "view">;
+  getFunction(
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -638,6 +683,13 @@ export interface SoundNFT extends BaseContract {
   getFunction(
     nameOrSignature: "proxiableUUID"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "removeStaff"
+  ): TypedContractMethod<
+    [account: AddressLike, role: string],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "renounceRole"
   ): TypedContractMethod<
