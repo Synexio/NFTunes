@@ -12,19 +12,19 @@ import PauseIcon from "@mui/icons-material/Pause";
 import Link from "next/link";
 
 interface AudioPlayerProps {
-  url: string;
+  src: string;
   title: string;
-  artist: string;
+  author: string;
   id: number;
-  image: string;
+  thumbnail: string;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
-  url,
+  src,
   title,
-  artist,
+  author,
   id,
-  image,
+  thumbnail,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -61,7 +61,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       <Link href={`/play/${id}`} passHref>
         <CardContent>
           <Typography variant="subtitle1">{title}</Typography>
-          <Typography variant="subtitle2">{artist}</Typography>
+          <Typography variant="subtitle2">{author}</Typography>
         </CardContent>
       </Link>
       <Box
@@ -83,7 +83,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
         </IconButton>
       </Box>
-      <audio ref={audioRef} src={url} />
+      <audio ref={audioRef} src={src} />
 
       {/* Countdown Timer Visual */}
       <Box sx={{ padding: 1 }}>

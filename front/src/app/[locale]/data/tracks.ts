@@ -1,11 +1,9 @@
-import { StaticImageData } from "next/image";
-
 export interface Song {
   id: number;
   title: string;
   src: string;
   author: string;
-  thumbnail: string | StaticImageData; // Uncomment if you want to use thumbnail property
+  thumbnail: string; // Uncomment if you want to use thumbnail property
 }
 
 export const tracks = [

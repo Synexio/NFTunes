@@ -3,51 +3,18 @@
 import { Box, Button, Typography, TextField, Grid } from "@mui/material";
 import React, { useState, ChangeEvent } from "react";
 import AudioPlayer from "../AudioPlayer";
-
-// Define type for each song
-interface Song {
-  id: number;
-  title: string;
-  url: string;
-  artist: string;
-  // image?: string;
-}
+import { tracks, Song } from "../../data/tracks";
 
 const SearchPage = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Song[]>([]);
-
-  // Simulated music database (replace with actual API call)
-  const musicDatabase: Song[] = [
-    {
-      id: 1,
-      title: "Song One",
-      url: "http://streaming.tdiradio.com:8000/house.mp3",
-      artist: "Artist One",
-      // image: "@public/logo.png",
-    },
-    {
-      id: 2,
-      title: "Song Two",
-      url: "https://pixabay.com/fr/music/beats-velvet-sky-lofi-ambient-231924/",
-      artist: "Artist Two",
-      // image: "/path/to/album2.jpg",
-    },
-    {
-      id: 3,
-      title: "Another Song",
-      url: "/music/song3.mp3",
-      artist: "Artist Three",
-      // image: "/path/to/album3.jpg",
-    },
-  ];
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     const searchQuery = event.target.value;
     setQuery(searchQuery);
 
     if (searchQuery.length > 0) {
-      const filteredResults = musicDatabase.filter((song) =>
+      const filteredResults = tracks.filter((song) =>
         song.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setResults(filteredResults);
@@ -88,13 +55,14 @@ const SearchPage = () => {
         <div>
           {results.length > 0 ? (
             <Grid container spacing={2}>
-              {musicDatabase.map((track) => (
+              {tracks.map((track) => (
                 <Grid item key={track.id}>
                   <AudioPlayer
-                    url={track.url}
+                    src={track.src}
                     title={track.title}
-                    artist={track.artist}
+                    author={track.author}
                     id={track.id} // image={track.image}
+                    thumbnail={track.thumbnail}
                   />
                 </Grid>
               ))}
