@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -13,6 +12,17 @@ contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
     uint256 private _nextTokenId;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
+    mapping (address => string) private _staff;
+    
+     modifier onlyArtist() {
+        require(keccak256(abi.encodePacked(_staff[msg.sender])) != keccak256(abi.encodePacked("artist")), "Caller is not an artist");
+        _;
+    }
+
+    modifier onlyStaff() {
+        require(keccak256(abi.encodePacked(_staff[msg.sender])) != keccak256(abi.encodePacked("admin")) , "Caller is not admin");
+        _;
+    }
 
     function initialize(address admin, address artist, string memory name, string memory symbol)
         initializer public
@@ -33,6 +43,27 @@ contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
+
+    function addStaff(address account, string memory role) public onlyRole(ADMIN_ROLE) {
+        _addStaff(account, role);
+    }
+
+    function removeStaff(address account, string memory role) public onlyRole(ADMIN_ROLE) {
+        _removeStaff(account, role);
+    }
+
+    function isStaff(address account) public view returns (string memory) {
+        return _staff[account];
+    }
+
+    function _addStaff(address account, string memory role) internal {
+        _staff[account] = role;
+    }
+
+    function _removeStaff(address account, string memory role) internal {
+        _staff[account] = role;
+    }
+
 
     function _authorizeUpgrade(address newImplementation)
         internal

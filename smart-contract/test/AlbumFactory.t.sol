@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {SoundNFTFactory} from "../contracts/SoundNFTFactory.sol";
+import {AlbumFactory} from "../contracts/AlbumFactory.sol";
 import {SoundNFT} from "../contracts/SoundNFT.sol";
 
 contract AlbumFactoryTest is Test {
@@ -11,7 +11,7 @@ contract AlbumFactoryTest is Test {
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    SoundNFTFactory instance;
+    AlbumFactory instance;
     address admin;
     address artist;
 
@@ -23,14 +23,13 @@ contract AlbumFactoryTest is Test {
         admin = makeAddr("admin");
     }
     function testInitialize() public {
-        instance.initialize();
-        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), address(this)));
+        instance.initialize(admin, artist);
+        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
     }
 
     function testCreateAlbum() public {
-        vm.startPrank(admin);
-        instance.hasRole(instance.ARTIST_ROLE(), artist);
-        vm.stopPrank();
+        instance.initialize(admin, artist);
+       
         vm.startPrank(artist);
         address newAlbum = instance.createAlbum("ether", "eth", admin, artist);
         // forge test -vv to see logs

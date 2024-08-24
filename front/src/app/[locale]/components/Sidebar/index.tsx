@@ -2,6 +2,7 @@ import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import AddIcon from "@mui/icons-material/Add";
 import Image from "next/image";
 import logo from "@public/drawing.png";
 import Link from "next/link";
@@ -76,6 +77,17 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             </ListItemIcon>
             <ListItemText
               primary="Subscribe"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
+        <Link href="/addAlbum" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <AddIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Add Album"
               primaryTypographyProps={{ color: "#b3b3b3" }}
             />
           </ListItem>

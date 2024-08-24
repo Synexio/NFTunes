@@ -39,6 +39,13 @@ contract SoundNFTTest is Test {
         console.log("Token Name: ", instance.name());
         vm.stopPrank();
     }
+    function testAddStaff() public {
+        instance.initialize(admin, artist,"Album1", "ALB1");
+        vm.startPrank(admin);
+        instance.addStaff(artist, "artist");
+        assertEq(instance.isStaff(artist), "artist");
+        vm.stopPrank();
+    }
     
 
 }

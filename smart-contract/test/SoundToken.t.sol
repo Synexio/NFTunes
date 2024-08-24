@@ -24,12 +24,13 @@ contract SoundTokenTest is Test {
     function testInitialize() public {
         instance.initialize(admin, artist);
         assertTrue(instance.hasRole(instance.ADMIN_ROLE(), admin));
+        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
     }
     function testAddRole() public{
         instance.initialize(admin, artist);
-        vm.prank(admin);
-        instance.grantRole(ARTIST_ROLE, artist);
+        vm.startPrank(admin);
         assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
+        vm.stopPrank();
     }
 
     function testMintSuccess() public {
@@ -42,7 +43,7 @@ contract SoundTokenTest is Test {
         assertEq(instance.balanceOf(admin), amount);
     }    
     function testBurnSuccess() public {
-        instance.initialize(admin);
+        instance.initialize(admin, artist);
         vm.startPrank(admin);
 
         uint256 mintAmount = 100000;
@@ -56,14 +57,11 @@ contract SoundTokenTest is Test {
     }
 
     function testClaimSuccess() public {
-        instance.initialize(admin);
-        vm.startPrank(admin);
-        instance.grantRole(ARTIST_ROLE, artist);
-
+        instance.initialize(admin, artist);
+        vm.prank(admin);
         uint256 mintAmount = 100000000;
         uint256 amount = 100;
         instance.mint(admin, mintAmount);
-
         vm.stopPrank();
 
         vm.prank(artist);
