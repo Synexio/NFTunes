@@ -81,7 +81,7 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             />
           </ListItem>
         </Link>
-        <Link href="/addAlbum" passHref>
+        <Link href="/profile/artist/createAlbum" passHref>
           <ListItem>
             <ListItemIcon>
               <AddIcon sx={{ color: "#b3b3b3" }} />
