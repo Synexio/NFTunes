@@ -19,7 +19,6 @@ contract SoundToken is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable
         _;
     }
 
-
     function initialize(address admin, address staffContractAddress)
         initializer public
     {

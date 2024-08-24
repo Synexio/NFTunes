@@ -19,15 +19,18 @@ contract SoundNFTTest is Test {
     // Create a new instance of the contract, declare owner and random recipient
     function setUp() public {
         instance = new SoundNFT();
+        staff = new Staff();
         // create a random recipient address
         artist = makeAddr("artist");
         admin = makeAddr("admin");
-        instance.initialize(admin, artist, "Album", "ALB");
+        instance.initialize(admin, address(staff), "Album", "ALB");
+        staff.initialize(admin);
+        vm.prank(admin);
+        staff.addStaff(artist, "artist");
 
     }
     function testInitialize() public view {
         assertTrue(instance.hasRole(instance.ADMIN_ROLE(), admin));
-        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
         assertEq(instance.name(), "Album");
         assertEq(instance.symbol(), "ALB");
     }
@@ -41,5 +44,6 @@ contract SoundNFTTest is Test {
         console.log("Token Name: ", instance.name());
         vm.stopPrank();
     }
+    
 
 }

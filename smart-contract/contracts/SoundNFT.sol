@@ -7,13 +7,19 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Burnab
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "./Staff.sol";
 
 contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, ERC721BurnableUpgradeable, AccessControlUpgradeable, UUPSUpgradeable {
     uint256 private _nextTokenId;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
+     Staff private staffContract;
+    
+    modifier onlyArtist() {
+        require(keccak256(abi.encodePacked(staffContract.isStaff(msg.sender))) == keccak256(abi.encodePacked("artist")), "Caller is not an artist");
+        _;
+    }
 
-    function initialize(address admin, address artist, string memory name, string memory symbol)
+    function initialize(address admin, address staffContractAddress, string memory name, string memory symbol)
         initializer public
     {
         __ERC721_init(name, symbol);
@@ -24,10 +30,11 @@ contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
 
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(ADMIN_ROLE, admin);
-        _grantRole(ARTIST_ROLE, artist);
+        staffContract = Staff(staffContractAddress);
+
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(ARTIST_ROLE) {
+    function safeMint(address to, string memory uri) public onlyArtist {
         uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
