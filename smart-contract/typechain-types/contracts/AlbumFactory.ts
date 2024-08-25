@@ -27,7 +27,6 @@ export interface AlbumFactoryInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "ADMIN_ROLE"
-      | "ARTIST_ROLE"
       | "DEFAULT_ADMIN_ROLE"
       | "UPGRADE_INTERFACE_VERSION"
       | "createAlbum"
@@ -54,10 +53,6 @@ export interface AlbumFactoryInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "ADMIN_ROLE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "ARTIST_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -114,10 +109,6 @@ export interface AlbumFactoryInterface extends Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "ADMIN_ROLE", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "ARTIST_ROLE",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
@@ -287,14 +278,17 @@ export interface AlbumFactory extends BaseContract {
 
   ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
-  ARTIST_ROLE: TypedContractMethod<[], [string], "view">;
-
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
 
   createAlbum: TypedContractMethod<
-    [name: string, symbol: string, admin: AddressLike, artist: AddressLike],
+    [
+      name: string,
+      symbol: string,
+      admin: AddressLike,
+      staffContractAddress: AddressLike
+    ],
     [string],
     "nonpayable"
   >;
@@ -316,7 +310,7 @@ export interface AlbumFactory extends BaseContract {
   >;
 
   initialize: TypedContractMethod<
-    [admin: AddressLike, artist: AddressLike],
+    [admin: AddressLike, staffContractAddress: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -355,9 +349,6 @@ export interface AlbumFactory extends BaseContract {
     nameOrSignature: "ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "ARTIST_ROLE"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "DEFAULT_ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -366,7 +357,12 @@ export interface AlbumFactory extends BaseContract {
   getFunction(
     nameOrSignature: "createAlbum"
   ): TypedContractMethod<
-    [name: string, symbol: string, admin: AddressLike, artist: AddressLike],
+    [
+      name: string,
+      symbol: string,
+      admin: AddressLike,
+      staffContractAddress: AddressLike
+    ],
     [string],
     "nonpayable"
   >;
@@ -393,7 +389,7 @@ export interface AlbumFactory extends BaseContract {
   getFunction(
     nameOrSignature: "initialize"
   ): TypedContractMethod<
-    [admin: AddressLike, artist: AddressLike],
+    [admin: AddressLike, staffContractAddress: AddressLike],
     [void],
     "nonpayable"
   >;

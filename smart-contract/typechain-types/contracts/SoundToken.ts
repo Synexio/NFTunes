@@ -455,7 +455,7 @@ export interface SoundToken extends BaseContract {
   >;
 
   initialize: TypedContractMethod<
-    [admin: AddressLike, artist: AddressLike],
+    [admin: AddressLike, staffContractAddress: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -590,7 +590,7 @@ export interface SoundToken extends BaseContract {
   getFunction(
     nameOrSignature: "initialize"
   ): TypedContractMethod<
-    [admin: AddressLike, artist: AddressLike],
+    [admin: AddressLike, staffContractAddress: AddressLike],
     [void],
     "nonpayable"
   >;

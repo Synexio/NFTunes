@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/AlbumFactory.sol": {
-      "lastModificationDate": 1724420236835,
-      "contentHash": "caa8ae9da395296f67ef21c65f539060",
+      "lastModificationDate": 1724510647699,
+      "contentHash": "d40eae1781d82fdd8794af6c69f0912f",
       "sourceName": "contracts/AlbumFactory.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -32,6 +32,7 @@
       },
       "imports": [
         "./SoundNFT.sol",
+        "./Staff.sol",
         "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol"
@@ -44,8 +45,8 @@
       ]
     },
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/SoundNFT.sol": {
-      "lastModificationDate": 1724492858880,
-      "contentHash": "a152f059547337ee75b7406cd719e71b",
+      "lastModificationDate": 1724510605686,
+      "contentHash": "6e04fde586226eed754b37ff47d641e0",
       "sourceName": "contracts/SoundNFT.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -78,7 +79,8 @@
         "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
-        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol"
+        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "./Staff.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -1223,8 +1225,8 @@
       ]
     },
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/SoundToken.sol": {
-      "lastModificationDate": 1724420236836,
-      "contentHash": "09eae64ff451ec31a48135a17e9e60d3",
+      "lastModificationDate": 1724510837128,
+      "contentHash": "58b6da3390ae907385078c3b10b7adac",
       "sourceName": "contracts/SoundToken.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -1256,7 +1258,8 @@
         "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
-        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol"
+        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "./Staff.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -1380,45 +1383,6 @@
       ],
       "artifacts": [
         "ERC165"
-      ]
-    },
-    "/Users/zhang/Documents/NFTunes/smart-contract/contracts/RoleManager.sol": {
-      "lastModificationDate": 1724420236835,
-      "contentHash": "8025254bf1d189fc0ce2d66750cbeca1",
-      "sourceName": "contracts/RoleManager.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "storageLayout"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/AccessControl.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "RoleManager"
       ]
     },
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/Staff.sol": {

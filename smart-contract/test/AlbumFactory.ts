@@ -4,48 +4,64 @@ import { expect } from "chai";
 
 describe("Album Factory", function () {
   async function deployNFTFactoryContract() {
-    const [owner, admin, artist, addr1, addr2] = await ethers.getSigners();
+    const [owner, admin, artist, addr1] = await ethers.getSigners();
+
+    const Staff = await hre.ethers.getContractFactory("Staff");
+    const staff = await upgrades.deployProxy(Staff, [admin.address], {
+      initializer: "initialize",
+    });
+
     const SoundFactory = await hre.ethers.getContractFactory("AlbumFactory");
     const soundFactory = await upgrades.deployProxy(
       SoundFactory,
-      [admin.address, artist.address],
+      [admin.address, staff.target],
       {
         initializer: "initialize",
       }
     );
 
-    return { soundFactory, owner, admin, artist, addr1, addr2 };
+    console.log("Staff deployed to:", staff.target);
+
+    // Add an artist
+    await staff.connect(admin).addStaff(artist.address, "artist");
+
+    return {
+      soundFactory,
+      owner,
+      admin,
+      artist, // addr1 is now the artist
+      addr1,
+      staff,
+    };
   }
 
   it("should create an album", async function () {
-    const { soundFactory, owner, artist, admin } = await loadFixture(
+    const { soundFactory, artist, admin, staff } = await loadFixture(
       deployNFTFactoryContract
     );
-    const isArtist = await soundFactory.hasRole(
-      ethers.keccak256(ethers.toUtf8Bytes("ARTIST_ROLE")),
-      artist.address
-    );
-    expect(isArtist).to.equal(true); // Ensure the artist has the role
 
     const tx = await soundFactory
       .connect(artist)
-      .createAlbum("album1", "abl1", admin.address, artist.address);
-    soundFactory.connect(artist);
-    const receipt = await tx.wait();
-    expect(receipt.status).to.equal(1);
-    const deployedAlbumAddress = await soundFactory.deployedAlbums(0);
+      .createAlbum("album1", "abl1", admin.address, staff.target);
 
+    const receipt = await tx.wait();
+
+    expect(receipt.status).to.equal(1); // Ensure the transaction succeeded
+
+    const deployedAlbumAddress = await soundFactory.deployedAlbums(0);
     console.log("New Album Address:", deployedAlbumAddress);
+
+    expect(deployedAlbumAddress).to.properAddress; // Check that the album was deployed
   });
 
   it("should not create an album", async function () {
-    const { soundFactory, addr1, admin, artist } = await loadFixture(
+    const { soundFactory, staff, addr1, admin } = await loadFixture(
       deployNFTFactoryContract
     );
     await expect(
       soundFactory
         .connect(addr1)
-        .createAlbum("album1", "abl1", admin.address, artist.address)
-    ).to.be.reverted;
+        .createAlbum("ether", "eth", admin.address, staff.target)
+    ).to.be.revertedWith("Caller is not an artist");
   });
 });
