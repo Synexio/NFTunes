@@ -1,18 +1,47 @@
-// pages/add-admin.tsx
 import React, { useState } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
+import { ethers } from "ethers";
+import { abi as ABI } from "../../../../../../smart-contract/artifacts/contracts/Staff.sol/Staff.json";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddAdminPage: React.FC = () => {
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminAddress, setAdminAddress] = useState("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission logic
-    console.log("Admin Name:", adminName);
-    console.log("Admin Email:", adminEmail);
-    console.log("Admin Address:", adminAddress);
+
+    try {
+      // Check if MetaMask is installed
+      if (!window.ethereum) {
+        toast.error("Please install MetaMask to interact with this feature.");
+        return;
+      }
+
+      // Request account access if needed
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+
+      // Create a new Web3 provider and signer
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      // Contract address - Replace with your contract address
+      const contractAddress = "0x46C55a5C3c18eF51c0aAdc9CB88Ea75009a9791d";
+
+      // Create a new contract instance
+      const contract = new ethers.Contract(contractAddress, ABI, signer);
+
+      // Call the smart contract function to add a new admin
+      const transaction = await contract.addStaff(adminAddress, "artist");
+      await transaction.wait(); // Wait for the transaction to be mined
+
+      toast.success("Admin added successfully!");
+    } catch (error) {
+      console.error("Error adding admin:", error);
+      toast.error("There was an error adding the admin.");
+    }
   };
 
   return (
@@ -143,6 +172,9 @@ const AddAdminPage: React.FC = () => {
           Add Admin
         </Button>
       </Box>
+
+      {/* Toast Container for notifications */}
+      <ToastContainer />
     </Box>
   );
 };
