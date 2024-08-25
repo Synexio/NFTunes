@@ -134,10 +134,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AlbumFactory__factory>;
     getContractFactory(
-      name: "RoleManager",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.RoleManager__factory>;
-    getContractFactory(
       name: "SoundNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SoundNFT__factory>;
@@ -301,11 +297,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AlbumFactory>;
     getContractAt(
-      name: "RoleManager",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.RoleManager>;
-    getContractAt(
       name: "SoundNFT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -441,10 +432,6 @@ declare module "hardhat/types/runtime" {
       name: "AlbumFactory",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AlbumFactory>;
-    deployContract(
-      name: "RoleManager",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.RoleManager>;
     deployContract(
       name: "SoundNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -608,11 +595,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AlbumFactory>;
-    deployContract(
-      name: "RoleManager",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.RoleManager>;
     deployContract(
       name: "SoundNFT",
       args: any[],

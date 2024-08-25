@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/AlbumFactory.sol": {
-      "lastModificationDate": 1724510647699,
+      "lastModificationDate": 1724575458528,
       "contentHash": "d40eae1781d82fdd8794af6c69f0912f",
       "sourceName": "contracts/AlbumFactory.sol",
       "solcConfig": {
@@ -45,8 +45,8 @@
       ]
     },
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/SoundNFT.sol": {
-      "lastModificationDate": 1724510605686,
-      "contentHash": "6e04fde586226eed754b37ff47d641e0",
+      "lastModificationDate": 1724579211891,
+      "contentHash": "f5a7ebed7c6366050fe0d611060ff56e",
       "sourceName": "contracts/SoundNFT.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -1225,8 +1225,8 @@
       ]
     },
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/SoundToken.sol": {
-      "lastModificationDate": 1724510837128,
-      "contentHash": "58b6da3390ae907385078c3b10b7adac",
+      "lastModificationDate": 1724578672168,
+      "contentHash": "4ba7b861fd994b1102966c517e757b44",
       "sourceName": "contracts/SoundToken.sol",
       "solcConfig": {
         "version": "0.8.20",

@@ -10,10 +10,10 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./Staff.sol";
 
 contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, ERC721BurnableUpgradeable, AccessControlUpgradeable, UUPSUpgradeable {
-    uint256 private _nextTokenId;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-     Staff private staffContract;
-    
+    uint256 private _nextTokenId;
+    Staff private staffContract;
+
     modifier onlyArtist() {
         require(keccak256(abi.encodePacked(staffContract.isStaff(msg.sender))) == keccak256(abi.encodePacked("artist")), "Caller is not an artist");
         _;

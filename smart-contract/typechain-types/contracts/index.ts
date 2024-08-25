@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { AlbumFactory } from "./AlbumFactory";
-export type { RoleManager } from "./RoleManager";
 export type { SoundNFT } from "./SoundNFT";
 export type { SoundToken } from "./SoundToken";
 export type { Staff } from "./Staff";

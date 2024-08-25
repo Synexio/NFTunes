@@ -66,8 +66,6 @@ export type { Strings } from "./@openzeppelin/contracts/utils/Strings";
 export { Strings__factory } from "./factories/@openzeppelin/contracts/utils/Strings__factory";
 export type { AlbumFactory } from "./contracts/AlbumFactory";
 export { AlbumFactory__factory } from "./factories/contracts/AlbumFactory__factory";
-export type { RoleManager } from "./contracts/RoleManager";
-export { RoleManager__factory } from "./factories/contracts/RoleManager__factory";
 export type { SoundNFT } from "./contracts/SoundNFT";
 export { SoundNFT__factory } from "./factories/contracts/SoundNFT__factory";
 export type { SoundToken } from "./contracts/SoundToken";

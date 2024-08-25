@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export { AlbumFactory__factory } from "./AlbumFactory__factory";
-export { RoleManager__factory } from "./RoleManager__factory";
 export { SoundNFT__factory } from "./SoundNFT__factory";
 export { SoundToken__factory } from "./SoundToken__factory";
 export { Staff__factory } from "./Staff__factory";

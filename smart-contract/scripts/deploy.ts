@@ -15,7 +15,6 @@ async function main() {
   // );
   // await soundNFT.waitForDeployment();
   // console.log("SoundNFT deployed to:", await soundNFT.getAddress());
-
   // const AlbumFactory = await ethers.getContractFactory("AlbumFactory");
   // console.log("Deploying AlbumFactory to", network.name);
   // const albumFactory = await upgrades.deployProxy(
@@ -47,6 +46,7 @@ async function main() {
   await staff.waitForDeployment();
   console.log("Staff deployed to:", await staff.getAddress());
 }
+// spin inform rough banana name art use frost job adjust jump joy
 
 main()
   .then(() => process.exit(0))

@@ -27,7 +27,6 @@ export interface SoundTokenInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "ADMIN_ROLE"
-      | "ARTIST_ROLE"
       | "DEFAULT_ADMIN_ROLE"
       | "UPGRADE_INTERFACE_VERSION"
       | "allowance"
@@ -68,10 +67,6 @@ export interface SoundTokenInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "ADMIN_ROLE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "ARTIST_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -167,10 +162,6 @@ export interface SoundTokenInterface extends Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "ADMIN_ROLE", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "ARTIST_ROLE",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
@@ -394,8 +385,6 @@ export interface SoundToken extends BaseContract {
 
   ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
-  ARTIST_ROLE: TypedContractMethod<[], [string], "view">;
-
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
@@ -516,9 +505,6 @@ export interface SoundToken extends BaseContract {
 
   getFunction(
     nameOrSignature: "ADMIN_ROLE"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "ARTIST_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "DEFAULT_ADMIN_ROLE"
