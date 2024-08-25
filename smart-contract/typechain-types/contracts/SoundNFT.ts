@@ -27,7 +27,6 @@ export interface SoundNFTInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "ADMIN_ROLE"
-      | "ARTIST_ROLE"
       | "DEFAULT_ADMIN_ROLE"
       | "UPGRADE_INTERFACE_VERSION"
       | "approve"
@@ -71,10 +70,6 @@ export interface SoundNFTInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "ADMIN_ROLE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "ARTIST_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -170,10 +165,6 @@ export interface SoundNFTInterface extends Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "ADMIN_ROLE", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "ARTIST_ROLE",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
@@ -453,8 +444,6 @@ export interface SoundNFT extends BaseContract {
 
   ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
-  ARTIST_ROLE: TypedContractMethod<[], [string], "view">;
-
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
@@ -486,7 +475,12 @@ export interface SoundNFT extends BaseContract {
   >;
 
   initialize: TypedContractMethod<
-    [admin: AddressLike, artist: AddressLike, name: string, symbol: string],
+    [
+      admin: AddressLike,
+      staffContractAddress: AddressLike,
+      name: string,
+      symbol: string
+    ],
     [void],
     "nonpayable"
   >;
@@ -574,9 +568,6 @@ export interface SoundNFT extends BaseContract {
     nameOrSignature: "ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "ARTIST_ROLE"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "DEFAULT_ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -618,7 +609,12 @@ export interface SoundNFT extends BaseContract {
   getFunction(
     nameOrSignature: "initialize"
   ): TypedContractMethod<
-    [admin: AddressLike, artist: AddressLike, name: string, symbol: string],
+    [
+      admin: AddressLike,
+      staffContractAddress: AddressLike,
+      name: string,
+      symbol: string
+    ],
     [void],
     "nonpayable"
   >;

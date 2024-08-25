@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
 import {SoundToken} from "../contracts/SoundToken.sol";
+import {Staff} from "../contracts/Staff.sol";
 
 contract SoundTokenTest is Test {
 
@@ -11,30 +12,34 @@ contract SoundTokenTest is Test {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     SoundToken instance;
+    Staff staff;
     address admin;
     address artist;
+    address addr1;
 
     // Create a new instance of the contract, declare owner and random recipient
     function setUp() public {
         instance = new SoundToken();
+        staff = new Staff();
         // create a random recipient address
         artist = makeAddr("artist");
         admin = makeAddr("admin");
+        addr1 = makeAddr("user");
+        staff.initialize(admin);
+        vm.prank(admin);
+        staff.addStaff(artist, "artist");
+        instance.initialize(admin, address(staff));
     }
-    function testInitialize() public {
-        instance.initialize(admin, artist);
+    function testInitialize() public view {
         assertTrue(instance.hasRole(instance.ADMIN_ROLE(), admin));
-        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
     }
     function testAddRole() public{
-        instance.initialize(admin, artist);
         vm.startPrank(admin);
-        assertTrue(instance.hasRole(instance.ARTIST_ROLE(), artist));
+        staff.addStaff(artist, "artist");
         vm.stopPrank();
     }
 
     function testMintSuccess() public {
-        instance.initialize(admin, artist);
         vm.prank(admin);
 
         uint256 amount = 100000000;
@@ -43,7 +48,6 @@ contract SoundTokenTest is Test {
         assertEq(instance.balanceOf(admin), amount);
     }    
     function testBurnSuccess() public {
-        instance.initialize(admin, artist);
         vm.startPrank(admin);
 
         uint256 mintAmount = 100000;
@@ -57,7 +61,6 @@ contract SoundTokenTest is Test {
     }
 
     function testClaimSuccess() public {
-        instance.initialize(admin, artist);
         vm.prank(admin);
         uint256 mintAmount = 100000000;
         uint256 amount = 100;
@@ -68,5 +71,16 @@ contract SoundTokenTest is Test {
         instance.claim(admin, artist, amount);
         assertEq(instance.balanceOf(artist), amount);
     }
-
+    function testClaimFail() public {
+        vm.prank(admin);
+        uint256 mintAmount = 100000000;
+        uint256 amount = 100;
+        instance.mint(admin, mintAmount);
+        vm.stopPrank();
+        // By placing vm.expectRevert before the claim function call, 
+        // you ensure the test framework knows to expect a revert, making the test valid
+        vm.expectRevert(bytes("Caller is not an artist"));
+        vm.prank(addr1);
+        instance.claim(admin, artist, amount);
+    }
 }

@@ -7,24 +7,19 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Burnab
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "./Staff.sol";
 
 contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, ERC721BurnableUpgradeable, AccessControlUpgradeable, UUPSUpgradeable {
-    uint256 private _nextTokenId;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
-    mapping (address => string) private _staff;
-    
-     modifier onlyArtist() {
-        require(keccak256(abi.encodePacked(_staff[msg.sender])) != keccak256(abi.encodePacked("artist")), "Caller is not an artist");
+    uint256 private _nextTokenId;
+    Staff private staffContract;
+
+    modifier onlyArtist() {
+        require(keccak256(abi.encodePacked(staffContract.isStaff(msg.sender))) == keccak256(abi.encodePacked("artist")), "Caller is not an artist");
         _;
     }
 
-    modifier onlyStaff() {
-        require(keccak256(abi.encodePacked(_staff[msg.sender])) != keccak256(abi.encodePacked("admin")) , "Caller is not admin");
-        _;
-    }
-
-    function initialize(address admin, address artist, string memory name, string memory symbol)
+    function initialize(address admin, address staffContractAddress, string memory name, string memory symbol)
         initializer public
     {
         __ERC721_init(name, symbol);
@@ -35,33 +30,14 @@ contract SoundNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
 
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(ADMIN_ROLE, admin);
-        _grantRole(ARTIST_ROLE, artist);
+        staffContract = Staff(staffContractAddress);
+
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(ARTIST_ROLE) {
+    function safeMint(address to, string memory uri) public onlyArtist {
         uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-    }
-
-    function addStaff(address account, string memory role) public onlyRole(ADMIN_ROLE) {
-        _addStaff(account, role);
-    }
-
-    function removeStaff(address account, string memory role) public onlyRole(ADMIN_ROLE) {
-        _removeStaff(account, role);
-    }
-
-    function isStaff(address account) public view returns (string memory) {
-        return _staff[account];
-    }
-
-    function _addStaff(address account, string memory role) internal {
-        _staff[account] = role;
-    }
-
-    function _removeStaff(address account, string memory role) internal {
-        _staff[account] = role;
     }
 
 

@@ -5,10 +5,18 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 describe("SoundToken", function () {
   async function deployNFTuneContract() {
     const [owner, admin, artist, addr1, addr2] = await ethers.getSigners();
+
+    const Staff = await hre.ethers.getContractFactory("Staff");
+    const staff = await upgrades.deployProxy(Staff, [admin.address], {
+      initializer: "initialize",
+    });
+
+    await staff.connect(admin).addStaff(artist.address, "artist");
+
     const SoundToken = await hre.ethers.getContractFactory("SoundToken");
     const soundToken = await upgrades.deployProxy(
       SoundToken,
-      [admin.address, artist.address],
+      [admin.address, staff.target],
       {
         initializer: "initialize",
       }
@@ -46,11 +54,6 @@ describe("SoundToken", function () {
       deployNFTuneContract
     );
     await soundToken.connect(admin).mint(admin.address, 1000000);
-    const isArtist = await soundToken.hasRole(
-      ethers.keccak256(ethers.toUtf8Bytes("ARTIST_ROLE")),
-      artist.address
-    );
-    expect(isArtist).to.equal(true); // Ensure the artist has the role
 
     await soundToken.connect(artist).claim(admin.address, artist.address, 1000);
     expect(await soundToken.balanceOf(admin.address)).to.equal(1000000 - 1000);

@@ -98,10 +98,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC20__factory>;
     getContractFactory(
-      name: "ERC721",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC721__factory>;
-    getContractFactory(
       name: "IERC721Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Metadata__factory>;
@@ -138,10 +134,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AlbumFactory__factory>;
     getContractFactory(
-      name: "RoleManager",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.RoleManager__factory>;
-    getContractFactory(
       name: "SoundNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SoundNFT__factory>;
@@ -149,6 +141,10 @@ declare module "hardhat/types/runtime" {
       name: "SoundToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SoundToken__factory>;
+    getContractFactory(
+      name: "Staff",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Staff__factory>;
 
     getContractAt(
       name: "AccessControlUpgradeable",
@@ -256,11 +252,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC20>;
     getContractAt(
-      name: "ERC721",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC721>;
-    getContractAt(
       name: "IERC721Metadata",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -306,11 +297,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AlbumFactory>;
     getContractAt(
-      name: "RoleManager",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.RoleManager>;
-    getContractAt(
       name: "SoundNFT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -320,6 +306,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.SoundToken>;
+    getContractAt(
+      name: "Staff",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Staff>;
 
     deployContract(
       name: "AccessControlUpgradeable",
@@ -406,10 +397,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC20>;
     deployContract(
-      name: "ERC721",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ERC721>;
-    deployContract(
       name: "IERC721Metadata",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC721Metadata>;
@@ -446,10 +433,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AlbumFactory>;
     deployContract(
-      name: "RoleManager",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.RoleManager>;
-    deployContract(
       name: "SoundNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SoundNFT>;
@@ -457,6 +440,10 @@ declare module "hardhat/types/runtime" {
       name: "SoundToken",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SoundToken>;
+    deployContract(
+      name: "Staff",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Staff>;
 
     deployContract(
       name: "AccessControlUpgradeable",
@@ -564,11 +551,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC20>;
     deployContract(
-      name: "ERC721",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ERC721>;
-    deployContract(
       name: "IERC721Metadata",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -614,11 +596,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AlbumFactory>;
     deployContract(
-      name: "RoleManager",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.RoleManager>;
-    deployContract(
       name: "SoundNFT",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -628,6 +605,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SoundToken>;
+    deployContract(
+      name: "Staff",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Staff>;
 
     // default types
     getContractFactory(
