@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test, console} from "../lib/forge-std/src/Test.sol";
 import {Staff} from "../contracts/Staff.sol";
 
 contract SoundNFTTest is Test {
