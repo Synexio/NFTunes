@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,26 +9,30 @@ import {
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import Link from "next/link";
 
 interface AudioPlayerProps {
-  url: string;
+  src: string;
   title: string;
-  artist: string;
-  // image: string; // Uncomment if you want to use an image
+  author: string;
+  id: number;
+  thumbnail: string;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
-  url,
+  src,
   title,
-  artist,
-  // image, // Uncomment if you want to use an image
+  author,
+  id,
+  thumbnail,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(10); // 10-second timer
   const [progress, setProgress] = useState<number>(0);
 
-  const togglePlay = () => {
+  const togglePlay = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent the card click event
     if (isPlaying) {
       audioRef.current?.pause();
     } else {
@@ -52,23 +56,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }, 1000);
   };
 
-  useEffect(() => {
-    const percentage = ((10 - remainingTime) / 10) * 100;
-    setProgress(percentage);
-  }, [remainingTime]);
-
   return (
-    <Card sx={{ width: 250, position: "relative" }}>
-      {/* Uncomment if you want to use an image
-      <CardMedia
-        component="img"
-        image={image}
-        height="140"
-      /> */}
-      <CardContent>
-        <Typography variant="subtitle1">{title}</Typography>
-        <Typography variant="subtitle2">{artist}</Typography>
-      </CardContent>
+    <Card sx={{ width: 250, position: "relative", cursor: "pointer" }}>
+      <Link href={`/play/${id}`} passHref>
+        <CardContent>
+          <Typography variant="subtitle1">{title}</Typography>
+          <Typography variant="subtitle2">{author}</Typography>
+        </CardContent>
+      </Link>
       <Box
         sx={{
           position: "absolute",
@@ -80,11 +75,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           padding: 1,
         }}
       >
-        <IconButton onClick={togglePlay} sx={{ color: "white" }}>
+        <IconButton
+          onClick={togglePlay}
+          sx={{ color: "white" }}
+          aria-label={isPlaying ? "Pause" : "Play"}
+        >
           {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
         </IconButton>
       </Box>
-      <audio ref={audioRef} src={url} onEnded={() => setIsPlaying(false)} />
+      <audio ref={audioRef} src={src} />
 
       {/* Countdown Timer Visual */}
       <Box sx={{ padding: 1 }}>

@@ -1,13 +1,8 @@
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import AddIcon from "@mui/icons-material/Add";
 import Image from "next/image";
 import logo from "@public/drawing.png";
 import Link from "next/link";
@@ -15,7 +10,7 @@ import { ConnectButton } from "thirdweb/react";
 import { client } from "../../client";
 
 interface SidebarProps {
-  setActivePage: (page: "home" | "search") => void;
+  setActivePage: (page: "home") => void;
 }
 
 const Sidebar = ({ setActivePage }: SidebarProps) => {
@@ -32,16 +27,11 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
       }}
     >
       {/* Spotify Logo */}
-      <Box sx={{ marginBottom: 4 }}>
-        <Link href="/home" passHref>
-          <Image
-            src={logo} // replace with the path to your logo
-            alt="Spotify Logo"
-            width={100}
-            height={50}
-          />
-        </Link>
-      </Box>
+      <Link href="/home" passHref>
+        <Box sx={{ marginBottom: 4 }}>
+          <Image src={logo} alt="Spotify Logo" width={100} height={50} />
+        </Box>
+      </Link>
 
       {/* Navigation List */}
       <List>
@@ -54,29 +44,54 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             }}
           />
         </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <Link href="/home" passHref>
-              <HomeIcon sx={{ color: "white" }} />
-            </Link>
-          </ListItemIcon>
-          <ListItemText
-            primary="Home"
-            primaryTypographyProps={{ color: "white" }}
-          />
-        </ListItem>
 
-        <ListItem onClick={() => setActivePage("search")}>
-          <ListItemIcon>
-            {/* <Link href="/home/search" passHref> */}
-            <SearchIcon sx={{ color: "#b3b3b3" }} />
-            {/* </Link> */}
-          </ListItemIcon>
-          <ListItemText
-            primary="Search"
-            primaryTypographyProps={{ color: "#b3b3b3" }}
-          />
-        </ListItem>
+        {/* Home Link */}
+        <Link href="/home" passHref>
+          <ListItem onClick={() => setActivePage("home")}>
+            <ListItemIcon>
+              <HomeIcon sx={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Home"
+              primaryTypographyProps={{ color: "white" }}
+            />
+          </ListItem>
+        </Link>
+
+        {/* Search Link */}
+        <Link href="/search" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <SearchIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Search"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
+        <Link href="/subscription" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <FavoriteIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Subscribe"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
+        <Link href="/profile/artist/createAlbum" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <AddIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Add Album"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
       </List>
     </Box>
   );

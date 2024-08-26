@@ -1,32 +1,17 @@
+// src/app/home/page.tsx
 "use client";
-import { Box, Container, Grid } from "@mui/material";
-import { useState } from "react";
-import Sidebar from "../components/Sidebar";
+import React, { useState } from "react";
+import Layout from "../components/Layout";
 import MainContent from "../components/MainContent";
-import SearchPage from "../components/SearchPage";
-import Footer from "../components/Footer";
+// import SearchPage from "../search";
 
-const Home = () => {
-  const [activePage, setActivePage] = useState<"home" | "search">("home");
+const Home: React.FC = () => {
+  const [activePage, setActivePage] = useState<"home" | "search">("home"); // Manage active page state
+
   return (
-    <Box>
-      {/* <Header /> */}
-      <Container maxWidth="lg" sx={{ display: "flex" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={3}>
-            <Sidebar setActivePage={setActivePage} />
-          </Grid>
-          <Grid item xs={12} md={9}>
-            {activePage === "home" ? (
-              <MainContent />
-            ) : (
-              <SearchPage onBackToHome={() => setActivePage("home")} />
-            )}
-          </Grid>
-        </Grid>
-      </Container>
-      <Footer />
-    </Box>
+    <Layout>
+      <MainContent />
+    </Layout>
   );
 };
 

@@ -2,16 +2,18 @@ import { Box, Typography, Link } from "@mui/material";
 
 const Footer = () => {
   return (
-    <Box sx={{ mt: 4, textAlign: "center" }}>
-      <Typography variant="body2" color="textSecondary">
-        © 2024 Spotify AB
+    <Box
+      sx={{ mt: 4, textAlign: "center", color: "white", margin: "auto auto" }}
+    >
+      <Typography variant="body2">
+        © 2024 ESGI 5IBC Alexandre Hannagan - Anais Zhang - Paul Bisset
       </Typography>
-      <Link href="#" color="inherit" sx={{ mx: 1 }}>
+      {/* <Link href="#" color="inherit" sx={{ mx: 1 }}>
         About
       </Link>
       <Link href="#" color="inherit" sx={{ mx: 1 }}>
         Jobs
-      </Link>
+      </Link> */}
       {/* Add more footer links */}
     </Box>
   );

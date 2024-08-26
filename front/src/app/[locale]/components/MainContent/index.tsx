@@ -4,25 +4,25 @@ import AlbumCard from "../AlbumCard";
 import SectionHeader from "../SectionHeader";
 
 const popularArtists = [
-  { image: "/path/to/artist1.jpg", name: "GIMS", role: "Artist" },
-  { image: "/path/to/artist2.jpg", name: "Jul", role: "Artist" },
-  { image: "/path/to/artist3.jpg", name: "Ninho", role: "Artist" },
-  { image: "/path/to/artist4.jpg", name: "David Guetta", role: "Artist" },
-  { image: "/path/to/artist5.jpg", name: "KeBlack", role: "Artist" },
-  { image: "/path/to/artist6.jpg", name: "Dadju", role: "Artist" },
+  { image: "", name: "GIMS", role: "Artist" },
+  { image: "", name: "Jul", role: "Artist" },
+  { image: "", name: "Ninho", role: "Artist" },
+  { image: "", name: "David Guetta", role: "Artist" },
+  { image: "", name: "KeBlack", role: "Artist" },
+  { image: "", name: "Dadju", role: "Artist" },
 ];
 
 const popularAlbums = [
   {
-    image: "/path/to/album1.jpg",
+    image: "",
     title: "HIT ME HARD AND SOFT",
     artist: "Billie Eilish",
   },
-  { image: "/path/to/album2.jpg", title: "SPIDER", artist: "GIMS, DYSTINCT" },
-  { image: "/path/to/album3.jpg", title: "Imagine", artist: "Carbonne" },
-  { image: "/path/to/album4.jpg", title: "Pyramide", artist: "Werenoi" },
-  { image: "/path/to/album5.jpg", title: "SOIS PAS TIMIDE", artist: "GIMS" },
-  { image: "/path/to/album6.jpg", title: "Destin", artist: "Ninho" },
+  { image: "", title: "SPIDER", artist: "GIMS, DYSTINCT" },
+  { image: "", title: "Imagine", artist: "Carbonne" },
+  { image: "", title: "Pyramide", artist: "Werenoi" },
+  { image: "", title: "SOIS PAS TIMIDE", artist: "GIMS" },
+  { image: "", title: "Destin", artist: "Ninho" },
 ];
 
 const MainContent = () => {
