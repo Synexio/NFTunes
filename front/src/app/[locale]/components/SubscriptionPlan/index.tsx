@@ -3,6 +3,7 @@ import { Subs } from "subs-widget";
 
 const Subscription = () => {
   const handleResponse = (response: { success: boolean; message: string }) => {
+    //TO DO
     console.log("This is what happened", response);
   };
 
@@ -50,17 +51,18 @@ const Subscription = () => {
           Subscribe Now
         </Button> */}
         <Subs
-          address={"0x8e468E7Cbf7E7E056A7591C796F2dd4C5C255591"}
-          appId="4"
-          chain={"bsc"}
+          address={"0x6176d4666693933eF3a73ce38C28de54A611012D"}
+          appId="24"
+          chain={"bsct"}
           mode="testnet"
           apiKey="fr96nskplu06obzxtjfwmkswdhpfk9"
           color="red"
           width={200}
-          defaultPayment="30Days"
+          defaultPayment="Prenium"
           choice={{
-            payment: "30Days",
-            token: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+            payment: "Prenium",
+            //address token payment
+            token: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
           }}
           dataOnSubs={handleResponse}
         />
