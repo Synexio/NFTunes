@@ -1,6 +1,11 @@
 import { Box, Typography, Button } from "@mui/material";
+import { Subs } from "subs-widget";
 
 const Subscription = () => {
+  const handleResponse = (response: { success: boolean; message: string }) => {
+    console.log("This is what happened", response);
+  };
+
   return (
     <Box
       sx={{
@@ -32,9 +37,9 @@ const Subscription = () => {
           Unlock gift and advantages with your favorite artist.
         </Typography>
         <Typography variant="h5" sx={{ margin: "20px 0" }}>
-          $9.99/month
+          1.99/month
         </Typography>
-        <Button
+        {/* <Button
           variant="contained"
           sx={{
             backgroundColor: "black",
@@ -43,7 +48,22 @@ const Subscription = () => {
           }}
         >
           Subscribe Now
-        </Button>
+        </Button> */}
+        <Subs
+          address={"0x8e468E7Cbf7E7E056A7591C796F2dd4C5C255591"}
+          appId="4"
+          chain={"bsc"}
+          mode="testnet"
+          apiKey="fr96nskplu06obzxtjfwmkswdhpfk9"
+          color="red"
+          width={200}
+          defaultPayment="30Days"
+          choice={{
+            payment: "30Days",
+            token: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+          }}
+          dataOnSubs={handleResponse}
+        />
       </Box>
     </Box>
   );
