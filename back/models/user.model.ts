@@ -12,6 +12,7 @@ export interface UserProps {
   banned: boolean;
   like: TitleProps[];
   follow: ArtistProps[];
+  subscription: string;
   role: ArtistProps;
 }
 
@@ -49,6 +50,10 @@ const userSchema = new Schema(
         ref: "Artist",
       },
     ],
+    subscription: {
+      type: Schema.Types.String,
+      default: "standard",
+    },
     role: {
       type: Schema.Types.ObjectId,
       required: true,
