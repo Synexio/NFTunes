@@ -1,49 +1,87 @@
-import { Request, Response, Router } from "express";
-import { UserService } from "../services";
-import { ApiErrorCode } from "../api-error-code.enum";
+import {Request, Response, Router} from "express";
+import {UserService} from "../services";
+import {ApiErrorCode} from "../api-error-code.enum";
 
 export class UserController {
-  private static instance: UserController;
+    private static instance: UserController;
 
-  private constructor() {}
-
-  public static getInstance(): UserController {
-    if (UserController.instance === undefined) {
-      UserController.instance = new UserController();
+    private constructor() {
     }
-    return UserController.instance;
-  }
 
-  async createUser(req: Request, res: Response): Promise<void> {
-    const data = req.body;
-    const result = await UserService.getInstance().createUser(data);
-    if (result === ApiErrorCode.alreadyExists) {
-      res.status(409).end(); // CONFLICT
-      return;
+    public static getInstance(): UserController {
+        if (UserController.instance === undefined) {
+            UserController.instance = new UserController();
+        }
+        return UserController.instance;
     }
-    res.json(result);
-  }
-  async updateUser(req: Request, res: Response) {
-    const id = req.params.id;
 
-    const data = req.body;
-    const result = await UserService.getInstance().updateUser(id, data);
+    async createUser(req: Request, res: Response): Promise<void> {
+        const data = req.body;
+        const result = await UserService.getInstance().createUser(data);
+        if (result === ApiErrorCode.alreadyExists) {
+            res.status(409).end(); // CONFLICT
+            return;
+        }
+        res.json(result);
+    }
 
-    // console.log(id, data, result);
-    // if (result === ApiErrorCode.notFound) {
-    //   return res.status(404).end();
-    // }
-    // if (result === ApiErrorCode.invalidParameters) {
-    //   return res.status(400).end();
-    // }
-    res.json(result);
-  }
+    async updateUser(req: Request, res: Response) {
+        const id = req.params.id;
 
-  buildRouter(): Router {
-    const router = Router();
-    router.post("/create", this.createUser.bind(this));
-    router.patch("/update/:id", this.updateUser.bind(this));
+        const data = req.body;
+        const result = await UserService.getInstance().updateUser(id, data);
+        if (result === ApiErrorCode.invalidParameters) {
+            res.status(400).end();
+            return;
+        }
+        if (result === ApiErrorCode.notFound) {
+            res.status(404).end();
+            return;
+        }
+        res.json(result);
+    }
 
-    return router;
-  }
+    async deleteUser(req: Request, res: Response) {
+        const id = req.params.id;
+        const result = await UserService.getInstance().deleteUser(id);
+        if (result === ApiErrorCode.notFound) {
+            res.status(404).end();
+            return;
+        }
+        if (result === ApiErrorCode.invalidParameters) {
+            res.status(400).end();
+            return;
+        }
+        res.status(204).end();
+    }
+
+    async getUserById(req: Request, res: Response) {
+        const id = req.params.id;
+        const result = await UserService.getInstance().getUserById(id);
+        if (result === null) {
+            res.status(404).end();
+            return;
+        }
+        res.json(result);
+    }
+
+    async getAllUsers(req: Request, res: Response) {
+        const result = await UserService.getInstance().getAllUsers();
+        if (result === null) {
+            res.status(404).end();
+            return;
+        }
+        res.json(result);
+    }
+
+    buildRouter(): Router {
+        const router = Router();
+        router.get("/", this.getAllUsers.bind(this));
+        router.post("/create", this.createUser.bind(this));
+        router.patch("/update/:id", this.updateUser.bind(this));
+        router.delete("/:id", this.deleteUser.bind(this));
+        router.get("/:id", this.getUserById.bind(this));
+
+        return router;
+    }
 }

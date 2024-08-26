@@ -1,12 +1,11 @@
 import * as mongoose from "mongoose";
 import { Schema, Document } from "mongoose";
-import { TitleProps } from "./title.model";
 
 export interface AlbumProps {
   _id: string;
   address: string;
   name: string;
-  titles: TitleProps[];
+  titles: string[];
 }
 
 export type AlbumDocument = AlbumProps & Document;
@@ -16,7 +15,6 @@ const albumSchema = new Schema(
     address: {
       type: Schema.Types.String,
       required: true,
-      unique: true,
     },
     name: {
       type: Schema.Types.String,

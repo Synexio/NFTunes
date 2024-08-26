@@ -6,9 +6,7 @@ import mongoose from "mongoose";
 import express from "express";
 
 import {
-  AlbumController,
-  TitleController,
-  UserController,
+  AlbumController, ArtistController, SubsController, TitleController, UserController,
 } from "./controllers";
 
 async function startServer(): Promise<void> {
@@ -35,11 +33,8 @@ async function startServer(): Promise<void> {
   app.use("/album", AlbumController.getInstance().buildRouter());
   app.use("/title", TitleController.getInstance().buildRouter());
   app.use("/user", UserController.getInstance().buildRouter());
-  // app.use("/burger", BurgerController.getInstance().buildRouter());
-  // app.use("/menu", MenuController.getInstance().buildRouter());
-  // app.use("/order", OrderController.getInstance().buildRouter());
-  // app.use("/promo", PromoController.getInstance().buildRouter());
-  // app.use("/user", AuthController.getInstance().buildRouter());
+  app.use("/sub", SubsController.getInstance().buildRouter());
+  app.use("/artist", ArtistController.getInstance().buildRouter());
   app.listen(process.env.PORT, async function () {
     await bootstrap();
     console.log("Server started on port " + process.env.PORT);
