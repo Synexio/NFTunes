@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Anais1210/BurgerAPI.git"
+    "url": "git+https://github.com/Synexio/NFTunes.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Anais1210/BurgerAPI/issues"
+    "url": "https://github.com/Synexio/NFTunes/issues"
   },
-  "homepage": "https://github.com/Anais1210/BurgerAPI#readme",
+  "homepage": "https://github.com/Synexio/NFTunes#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
