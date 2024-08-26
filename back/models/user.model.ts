@@ -1,23 +1,25 @@
 import * as mongoose from "mongoose";
 import { Schema, Document } from "mongoose";
-import { SessionProps } from "./session.model";
-import { RoleProps } from "./role.model";
+import { TitleProps } from "./title.model";
+import { ArtistProps } from "./artist.model";
 
 export interface UserProps {
   _id: string;
-  login: string;
+  address: string;
   lastname: string;
   firstname: string;
-  password: string;
-  sessions: (SessionProps | string)[];
-  role: string | RoleProps;
+  email: string;
+  banned: boolean;
+  like: TitleProps[];
+  follow: ArtistProps[];
+  role: ArtistProps;
 }
 
 export type UserDocument = UserProps & Document;
 
 const userSchema = new Schema(
   {
-    login: {
+    address: {
       type: Schema.Types.String,
       required: true,
       unique: true,
@@ -30,20 +32,27 @@ const userSchema = new Schema(
       type: Schema.Types.String,
       // required: true,
     },
-    password: {
-      type: Schema.Types.String,
+    banned: {
+      type: Schema.Types.Boolean,
+      default: false,
       required: true,
     },
-    sessions: [
+    like: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Session",
+        ref: "Title",
+      },
+    ],
+    follow: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Artist",
       },
     ],
     role: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Role",
+      ref: "Artist",
     },
   },
   {

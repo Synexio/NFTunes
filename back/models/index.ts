@@ -1,4 +1,4 @@
-export * from "./session.model";
+export * from "./title.model";
 export * from "./user.model";
 export * from "./role.model";
 export * from "./order.model";
@@ -6,5 +6,5 @@ export * from "./burger.model";
 export * from "./ingredient.model";
 export * from "./drink.model";
 export * from "./snack.model";
-export * from "./menu.model";
+export * from "./admin.model";
 export * from "./promo.model";
