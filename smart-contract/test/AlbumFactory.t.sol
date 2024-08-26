@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test, console} from "../lib/forge-std/src/Test.sol";
 import {AlbumFactory} from "../contracts/AlbumFactory.sol";
 import {SoundNFT} from "../contracts/SoundNFT.sol";
 import {Staff} from "../contracts/Staff.sol";
