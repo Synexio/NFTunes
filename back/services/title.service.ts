@@ -13,6 +13,18 @@ export class TitleService {
     return TitleService.instance;
   }
 
+  async createTitle(
+    create: TitleCreate
+  ): Promise<TitleDocument | ApiErrorCode> {
+    try {
+      const model = new TitleModel(create);
+      const title = await model.save();
+      return title;
+    } catch (err) {
+      return ApiErrorCode.invalidParameters;
+    }
+  }
+
   async getTitleById(id: string): Promise<TitleDocument | null> {
     if (!Types.ObjectId.isValid(id)) {
       return null;
@@ -52,45 +64,38 @@ export class TitleService {
   //   return query.exec();
   // }
 
-  async createTitle(
-    create: TitleCreate
-  ): Promise<TitleDocument | ApiErrorCode> {
-    try {
-      const model = new TitleModel(create);
-      const title = await model.save();
-      return title;
-    } catch (err) {
-      console.log(create);
-      return ApiErrorCode.invalidParameters;
-    }
-  }
+  // async deleteDrink(id: string): Promise<ApiErrorCode> {
+  //   if (!Types.ObjectId.isValid(id)) {
+  //     return ApiErrorCode.invalidParameters;
+  //   }
+  //   const title = await TitleModel.findByIdAndDelete(id);
+  //   if (title === null) {
+  //     return ApiErrorCode.notFound;
+  //   }
+  //   return ApiErrorCode.success;
+  // }
 
-  async deleteDrink(id: string): Promise<ApiErrorCode> {
-    if (!Types.ObjectId.isValid(id)) {
-      return ApiErrorCode.invalidParameters;
-    }
-    const title = await TitleModel.findByIdAndDelete(id);
-    if (title === null) {
-      return ApiErrorCode.notFound;
-    }
-    return ApiErrorCode.success;
-  }
+  // async updateDrink(
+  //   id: string,
+  //   update: DrinkUpdate
+  // ): Promise<TitleDocument | ApiErrorCode> {
+  //   if (!Types.ObjectId.isValid(id)) {
+  //     return ApiErrorCode.invalidParameters;
+  //   }
+  //   const drink = await TitleModel.findByIdAndUpdate(id, update, {
+  //     returnDocument: "after",
+  //   });
+  //   if (drink === null) {
+  //     return ApiErrorCode.notFound;
+  //   }
+  //   return drink;
+  // }
+}
 
-  async updateDrink(
-    id: string,
-    update: DrinkUpdate
-  ): Promise<TitleDocument | ApiErrorCode> {
-    if (!Types.ObjectId.isValid(id)) {
-      return ApiErrorCode.invalidParameters;
-    }
-    const drink = await TitleModel.findByIdAndUpdate(id, update, {
-      returnDocument: "after",
-    });
-    if (drink === null) {
-      return ApiErrorCode.notFound;
-    }
-    return drink;
-  }
+export interface TitleCreate {
+  readonly address: string;
+  readonly name: string;
+  readonly tokenId: number;
 }
 
 export interface DrinkSearch {
@@ -98,12 +103,6 @@ export interface DrinkSearch {
   readonly price?: number;
   readonly limit?: number;
   readonly offset?: number;
-}
-
-export interface TitleCreate {
-  readonly address: string;
-  readonly name: string;
-  readonly tokenId: number;
 }
 
 export interface DrinkUpdate {

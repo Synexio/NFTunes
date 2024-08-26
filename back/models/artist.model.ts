@@ -43,4 +43,7 @@ const artistSchema = new Schema(
   }
 );
 
-export const DrinkModel = mongoose.model<ArtistDocument>("Drink", artistSchema);
+export const ArtistModel = mongoose.model<ArtistDocument>(
+  "Artist",
+  artistSchema
+);
