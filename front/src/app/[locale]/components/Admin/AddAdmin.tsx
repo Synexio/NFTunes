@@ -4,6 +4,8 @@ import { ethers } from "ethers";
 import { abi as ABI } from "../../../../../../smart-contract/artifacts/contracts/Staff.sol/Staff.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const AddAdminPage: React.FC = () => {
   const [adminName, setAdminName] = useState("");
@@ -28,13 +30,13 @@ const AddAdminPage: React.FC = () => {
       const signer = provider.getSigner();
 
       // Contract address - Replace with your contract address
-      const contractAddress = "0x46C55a5C3c18eF51c0aAdc9CB88Ea75009a9791d";
+      const contractAddress = process.env.STAFF_ADDRESS as string;
 
       // Create a new contract instance
       const contract = new ethers.Contract(contractAddress, ABI, signer);
 
       // Call the smart contract function to add a new admin
-      const transaction = await contract.addStaff(adminAddress, "artist");
+      const transaction = await contract.addStaff(adminAddress, "admin");
       await transaction.wait(); // Wait for the transaction to be mined
 
       toast.success("Admin added successfully!");
