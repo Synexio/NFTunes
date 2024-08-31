@@ -1,72 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
-import { ethers } from "ethers";
-import { abi as ABI } from "../../../../../../smart-contract/artifacts/contracts/Staff.sol/Staff.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useActiveAccount } from "thirdweb/react";
-import { getContract, readContract } from "thirdweb";
-import { defineChain } from "thirdweb/chains";
-import { client } from "../../client";
+
+import { useUserRole } from "../../context/checkRole";
 
 import { config } from "dotenv";
 config();
 
 const AddAdminPage: React.FC = () => {
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const api = process.env.NEXT_PUBLIC_API_URL;
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+
   const account = useActiveAccount();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isArtist, setIsArtist] = useState(false);
-  const contractAddress = "0x9373392ce0d228840C7989A9be5D65F8964C2Fc6";
+  const { isAdmin, isArtist, walletAddress } = useUserRole(account);
 
-  const [adminName, setAdminName] = useState("");
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminAddress, setAdminAddress] = useState("");
-  useEffect(() => {
-    const handleSubmit = async (event: React.FormEvent) => {
-      event.preventDefault();
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
-      try {
-        // Check if MetaMask is installed
-        if (!account) {
-          setWalletAddress(null);
-          setIsAdmin(false);
-          setIsArtist(false);
-          toast.info("No account connected");
-          return;
-        }
-        console.log("wallet address", account.address);
-        const contract = getContract({
-          client,
-          chain: defineChain(80002),
-          address: contractAddress,
-        });
-        const role = await readContract({
-          contract,
-          method: "function isStaff(address account) view returns (string)",
-          params: [account.address],
-        });
-        if (role === "admin") {
-          setIsAdmin(true);
-          setIsArtist(false); // Assuming one role at a time
-        } else if (role === "artist") {
-          setIsArtist(true);
-          setIsAdmin(false);
-        } else {
-          setIsAdmin(false);
-          setIsArtist(false);
-        }
-        // Call the smart contract function to add a new admin
-        const transaction = await contract.addStaff(adminAddress, "admin");
-        await transaction.wait(); // Wait for the transaction to be mined
-
-        toast.success("Admin added successfully!");
-      } catch (error) {
-        console.error("Error adding admin:", error);
-        toast.error("There was an error adding the admin.");
+    try {
+      const requestData = {
+        address: address,
+        lastname: lastname,
+        firstname: firstname,
+        email: email,
+      };
+      const url = `${api}/user/create`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      if (response.ok) {
+        // await mintDegrees(1, [JSON.stringify(requestData)]);
+        toast.success("Admin enregistré !");
+        console.log("Admin enregistré !");
+      } else {
+        const errorData = await response.json();
+        console.log(errorData.message || "An error occurred");
       }
-    };
-  });
+    } catch (error) {
+      console.error("Error registering admin", error);
+    }
+  };
 
   return (
     <Box
@@ -100,9 +82,36 @@ const AddAdminPage: React.FC = () => {
         <TextField
           fullWidth
           variant="outlined"
-          label="Admin Name"
-          value={adminName}
-          onChange={(e) => setAdminName(e.target.value)}
+          label="Admin Firstname"
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          sx={{
+            marginBottom: 3,
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#333",
+              },
+              "&:hover fieldset": {
+                borderColor: "#555",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              color: "#888",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#fff",
+            },
+          }}
+          InputProps={{
+            style: { color: "white" },
+          }}
+        />
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Admin Lastname"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
           sx={{
             marginBottom: 3,
             "& .MuiOutlinedInput-root": {
@@ -129,8 +138,8 @@ const AddAdminPage: React.FC = () => {
           fullWidth
           variant="outlined"
           label="Admin Email"
-          value={adminEmail}
-          onChange={(e) => setAdminEmail(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           sx={{
             marginBottom: 3,
             "& .MuiOutlinedInput-root": {
@@ -157,8 +166,8 @@ const AddAdminPage: React.FC = () => {
           fullWidth
           variant="outlined"
           label="Admin Address"
-          value={adminAddress}
-          onChange={(e) => setAdminAddress(e.target.value)}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
           sx={{
             marginBottom: 3,
             "& .MuiOutlinedInput-root": {
