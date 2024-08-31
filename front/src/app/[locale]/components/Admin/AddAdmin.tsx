@@ -1,50 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { ethers } from "ethers";
 import { abi as ABI } from "../../../../../../smart-contract/artifacts/contracts/Staff.sol/Staff.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import * as dotenv from "dotenv";
-dotenv.config();
+import { useActiveAccount } from "thirdweb/react";
+import { getContract, readContract } from "thirdweb";
+import { defineChain } from "thirdweb/chains";
+import { client } from "../../client";
+
+import { config } from "dotenv";
+config();
 
 const AddAdminPage: React.FC = () => {
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const account = useActiveAccount();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isArtist, setIsArtist] = useState(false);
+  const contractAddress = "0x9373392ce0d228840C7989A9be5D65F8964C2Fc6";
+
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminAddress, setAdminAddress] = useState("");
+  useEffect(() => {
+    const handleSubmit = async (event: React.FormEvent) => {
+      event.preventDefault();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+      try {
+        // Check if MetaMask is installed
+        if (!account) {
+          setWalletAddress(null);
+          setIsAdmin(false);
+          setIsArtist(false);
+          toast.info("No account connected");
+          return;
+        }
+        console.log("wallet address", account.address);
+        const contract = getContract({
+          client,
+          chain: defineChain(80002),
+          address: contractAddress,
+        });
+        const role = await readContract({
+          contract,
+          method: "function isStaff(address account) view returns (string)",
+          params: [account.address],
+        });
+        if (role === "admin") {
+          setIsAdmin(true);
+          setIsArtist(false); // Assuming one role at a time
+        } else if (role === "artist") {
+          setIsArtist(true);
+          setIsAdmin(false);
+        } else {
+          setIsAdmin(false);
+          setIsArtist(false);
+        }
+        // Call the smart contract function to add a new admin
+        const transaction = await contract.addStaff(adminAddress, "admin");
+        await transaction.wait(); // Wait for the transaction to be mined
 
-    try {
-      // Check if MetaMask is installed
-      if (!window.ethereum) {
-        toast.error("Please install MetaMask to interact with this feature.");
-        return;
+        toast.success("Admin added successfully!");
+      } catch (error) {
+        console.error("Error adding admin:", error);
+        toast.error("There was an error adding the admin.");
       }
-
-      // Request account access if needed
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-
-      // Create a new Web3 provider and signer
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-
-      // Contract address - Replace with your contract address
-      const contractAddress = process.env.STAFF_ADDRESS as string;
-
-      // Create a new contract instance
-      const contract = new ethers.Contract(contractAddress, ABI, signer);
-
-      // Call the smart contract function to add a new admin
-      const transaction = await contract.addStaff(adminAddress, "admin");
-      await transaction.wait(); // Wait for the transaction to be mined
-
-      toast.success("Admin added successfully!");
-    } catch (error) {
-      console.error("Error adding admin:", error);
-      toast.error("There was an error adding the admin.");
-    }
-  };
+    };
+  });
 
   return (
     <Box

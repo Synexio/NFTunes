@@ -37,7 +37,7 @@ async function main() {
 
   // const deployedProxyStaff = process.env.PROXY_STAFF_ADDRESS;
 
-  // const Staff = await ethers.getContractFactory("SoundToken");
+  // const Staff = await ethers.getContractFactory("Staff");
   // console.log("Upgrading Staff...");
 
   // await upgrades.upgradeProxy(deployedProxyStaff as string, Staff);
