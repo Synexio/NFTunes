@@ -33,10 +33,12 @@ const artistSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
-    album: {
-      type: Schema.Types.ObjectId,
-      ref: "Album",
-    },
+    album: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Album",
+      },
+    ],
   },
   {
     versionKey: false,

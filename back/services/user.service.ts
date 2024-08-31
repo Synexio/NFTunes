@@ -17,11 +17,15 @@ export class UserService {
 
   async createUser(create: UserCreate): Promise<UserDocument | ApiErrorCode> {
     try {
+      const exist = await UserModel.findOne({ address: create.address });
+      if (exist) {
+        return ApiErrorCode.alreadyExists;
+      }
       const model = new UserModel(create);
       const user = await model.save();
       return user;
     } catch (err) {
-      return ApiErrorCode.alreadyExists;
+      return ApiErrorCode.invalidParameters;
     }
   }
 

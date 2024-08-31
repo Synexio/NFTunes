@@ -4,12 +4,14 @@ import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddIcon from "@mui/icons-material/Add";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import Image from "next/image";
 import logo from "@public/drawing.png";
 import Link from "next/link";
 import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import { client } from "../../client";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUserRole } from "../../context/checkRole";
 
@@ -87,6 +89,17 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             />
           </ListItem>
         </Link>
+        <Link href="/profile/artist/register" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <LibraryAddIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="I'm a talented ARTIST ⭐️"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
         {isArtist && (
           <Link href="/profile/artist/createAlbum" passHref>
             <ListItem>
@@ -101,17 +114,30 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
           </Link>
         )}
         {isAdmin && (
-          <Link href="/profile/admin/addAdmin" passHref>
-            <ListItem>
-              <ListItemIcon>
-                <AddIcon sx={{ color: "#b3b3b3" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Add Admin"
-                primaryTypographyProps={{ color: "#b3b3b3" }}
-              />
-            </ListItem>
-          </Link>
+          <>
+            <Link href="/profile/admin/addAdmin" passHref>
+              <ListItem>
+                <ListItemIcon>
+                  <AddIcon sx={{ color: "#b3b3b3" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Add Admin"
+                  primaryTypographyProps={{ color: "#b3b3b3" }}
+                />
+              </ListItem>
+            </Link>
+            <Link href="/profile/admin/addAdmin" passHref>
+              <ListItem>
+                <ListItemIcon>
+                  <FormatListBulletedIcon sx={{ color: "#b3b3b3" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Artists"
+                  primaryTypographyProps={{ color: "#b3b3b3" }}
+                />
+              </ListItem>
+            </Link>
+          </>
         )}
       </List>
 

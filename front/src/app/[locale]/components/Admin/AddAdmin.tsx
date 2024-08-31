@@ -20,37 +20,37 @@ const AddAdminPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const requestData = {
-        address: address,
-        lastname: lastname,
-        firstname: firstname,
-        email: email,
-        role: "admin",
-      };
-      const url = `${api}/user/create`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
+      // const requestData = {
+      //   address: address,
+      //   lastname: lastname,
+      //   firstname: firstname,
+      //   email: email,
+      //   role: "admin",
+      // };
+      // const url = `${api}/user/create`;
+      // const response = await fetch(url, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(requestData),
+      // });
+      // if (response.ok) {
+      const add = prepareContractCall({
+        contract,
+        method:
+          "function addStaff(address account, string role) view returns (string)",
+        params: [address as `0x${string}`, "admin"],
       });
-      if (response.ok) {
-        const add = prepareContractCall({
-          contract,
-          method:
-            "function addStaff(address account, string role) view returns (string)",
-          params: [address as `0x${string}`, "admin"],
-        });
-        console.log("Prepared Contract Call:", add);
-        sendTransaction(add);
-        toast.success("Admin enregistré !");
-      } else if (response.status === 409) {
-        toast.error("Admin already exists!");
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "An error occurred");
-      }
+      console.log("Prepared Contract Call:", add);
+      console.log(sendTransaction(add));
+      toast.success("Admin enregistré !");
+      // } else if (response.status === 409) {
+      //   toast.error("Admin already exists!");
+      // } else {
+      //   const errorData = await response.json();
+      //   toast.error(errorData.message || "An error occurred");
+      // }
     } catch (error) {
       console.error("Error registering admin", error);
     }
