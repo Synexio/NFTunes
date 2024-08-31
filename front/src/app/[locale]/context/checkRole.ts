@@ -1,17 +1,16 @@
 // hooks/useUserRole.ts
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { getContract, readContract } from "thirdweb"; // Adjust imports to your project structure
 import { defineChain } from "thirdweb/chains";
-import { getContract, readContract } from "thirdweb";
 import { client } from "../client";
-
 interface UserRole {
   isAdmin: boolean;
   isArtist: boolean;
   walletAddress: string | null;
 }
 
-const contractAddress = "0x46C55a5C3c18eF51c0aAdc9CB88Ea75009a9791d"; // Example contract address
+const contractAddress = "0x9373392ce0d228840C7989A9be5D65F8964C2Fc6"; // Example contract address
 
 export const useUserRole = (account: any): UserRole => {
   const [isAdmin, setIsAdmin] = useState(false);

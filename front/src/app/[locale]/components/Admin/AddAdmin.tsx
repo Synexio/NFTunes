@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useActiveAccount } from "thirdweb/react";
-
-import { useUserRole } from "../../context/checkRole";
-
-import { config } from "dotenv";
-config();
+import { useSendTransaction } from "thirdweb/react";
+import AdminGuard from "./AdminGuard";
+import { prepareContractCall } from "thirdweb";
+import { contract } from "../../context/contract";
 
 const AddAdminPage: React.FC = () => {
   const api = process.env.NEXT_PUBLIC_API_URL;
@@ -16,8 +14,7 @@ const AddAdminPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
 
-  const account = useActiveAccount();
-  const { isAdmin, isArtist, walletAddress } = useUserRole(account);
+  const { mutate: sendTransaction } = useSendTransaction();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -28,6 +25,7 @@ const AddAdminPage: React.FC = () => {
         lastname: lastname,
         firstname: firstname,
         email: email,
+        role: "admin",
       };
       const url = `${api}/user/create`;
       const response = await fetch(url, {
@@ -38,177 +36,185 @@ const AddAdminPage: React.FC = () => {
         body: JSON.stringify(requestData),
       });
       if (response.ok) {
-        // await mintDegrees(1, [JSON.stringify(requestData)]);
+        const add = prepareContractCall({
+          contract,
+          method:
+            "function addStaff(address account, string role) view returns (string)",
+          params: [address as `0x${string}`, "admin"],
+        });
+        console.log("Prepared Contract Call:", add);
+        sendTransaction(add);
         toast.success("Admin enregistré !");
-        console.log("Admin enregistré !");
+      } else if (response.status === 409) {
+        toast.error("Admin already exists!");
       } else {
         const errorData = await response.json();
-        console.log(errorData.message || "An error occurred");
+        toast.error(errorData.message || "An error occurred");
       }
     } catch (error) {
       console.error("Error registering admin", error);
     }
   };
-
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#121212",
-        color: "white",
-        padding: 4,
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Add New Admin
-      </Typography>
-
+    <AdminGuard>
       <Box
-        component="form"
-        onSubmit={handleSubmit}
         sx={{
-          width: "100%",
-          maxWidth: 600,
-          backgroundColor: "#1f1f1f",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#121212",
+          color: "white",
           padding: 4,
-          borderRadius: 2,
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Admin Firstname"
-          value={firstname}
-          onChange={(e) => setFirstname(e.target.value)}
-          sx={{
-            marginBottom: 3,
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "#333",
-              },
-              "&:hover fieldset": {
-                borderColor: "#555",
-              },
-            },
-            "& .MuiInputLabel-root": {
-              color: "#888",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#fff",
-            },
-          }}
-          InputProps={{
-            style: { color: "white" },
-          }}
-        />
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Admin Lastname"
-          value={lastname}
-          onChange={(e) => setLastname(e.target.value)}
-          sx={{
-            marginBottom: 3,
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "#333",
-              },
-              "&:hover fieldset": {
-                borderColor: "#555",
-              },
-            },
-            "& .MuiInputLabel-root": {
-              color: "#888",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#fff",
-            },
-          }}
-          InputProps={{
-            style: { color: "white" },
-          }}
-        />
+        <Typography variant="h4" gutterBottom>
+          Add New Admin
+        </Typography>
 
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Admin Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
           sx={{
-            marginBottom: 3,
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "#333",
-              },
-              "&:hover fieldset": {
-                borderColor: "#555",
-              },
-            },
-            "& .MuiInputLabel-root": {
-              color: "#888",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#fff",
-            },
-          }}
-          InputProps={{
-            style: { color: "white" },
-          }}
-        />
-
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Admin Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          sx={{
-            marginBottom: 3,
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "#333",
-              },
-              "&:hover fieldset": {
-                borderColor: "#555",
-              },
-            },
-            "& .MuiInputLabel-root": {
-              color: "#888",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#fff",
-            },
-          }}
-          InputProps={{
-            style: { color: "white" },
-          }}
-        />
-
-        <Button
-          variant="contained"
-          type="submit"
-          fullWidth
-          sx={{
-            backgroundColor: "#b3b3b3",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "gray",
-            },
+            width: "100%",
+            maxWidth: 600,
+            backgroundColor: "#1f1f1f",
+            padding: 4,
+            borderRadius: 2,
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
           }}
         >
-          Add Admin
-        </Button>
-      </Box>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Admin Firstname"
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
+            sx={{
+              marginBottom: 3,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#333",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#555",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#888",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#fff",
+              },
+            }}
+            InputProps={{
+              style: { color: "white" },
+            }}
+          />
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Admin Lastname"
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            sx={{
+              marginBottom: 3,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#333",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#555",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#888",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#fff",
+              },
+            }}
+            InputProps={{
+              style: { color: "white" },
+            }}
+          />
 
-      {/* Toast Container for notifications */}
-      <ToastContainer />
-    </Box>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Admin Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{
+              marginBottom: 3,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#333",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#555",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#888",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#fff",
+              },
+            }}
+            InputProps={{
+              style: { color: "white" },
+            }}
+          />
+
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Admin Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            sx={{
+              marginBottom: 3,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#333",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#555",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#888",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#fff",
+              },
+            }}
+            InputProps={{
+              style: { color: "white" },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            type="submit"
+            fullWidth
+            sx={{
+              backgroundColor: "#b3b3b3",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "gray",
+              },
+            }}
+          >
+            Add Admin
+          </Button>
+        </Box>
+
+        <ToastContainer />
+      </Box>
+    </AdminGuard>
   );
 };
 
