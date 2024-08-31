@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -6,14 +7,20 @@ import AddIcon from "@mui/icons-material/Add";
 import Image from "next/image";
 import logo from "@public/drawing.png";
 import Link from "next/link";
-import { ConnectButton } from "thirdweb/react";
+import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import { client } from "../../client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useUserRole } from "../../context/checkRole";
 
 interface SidebarProps {
   setActivePage: (page: "home") => void;
 }
 
 const Sidebar = ({ setActivePage }: SidebarProps) => {
+  const account = useActiveAccount();
+  const { isAdmin, isArtist, walletAddress } = useUserRole(account);
+
   return (
     <Box
       sx={{
@@ -26,10 +33,9 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
         justifyContent: "flex-start",
       }}
     >
-      {/* Spotify Logo */}
       <Link href="/home" passHref>
         <Box sx={{ marginBottom: 4 }}>
-          <Image src={logo} alt="Spotify Logo" width={100} height={50} />
+          <Image src={logo} alt="Logo" width={100} height={50} />
         </Box>
       </Link>
 
@@ -81,18 +87,35 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             />
           </ListItem>
         </Link>
-        <Link href="/profile/artist/createAlbum" passHref>
-          <ListItem>
-            <ListItemIcon>
-              <AddIcon sx={{ color: "#b3b3b3" }} />
-            </ListItemIcon>
-            <ListItemText
-              primary="Add Album"
-              primaryTypographyProps={{ color: "#b3b3b3" }}
-            />
-          </ListItem>
-        </Link>
+        {isArtist && (
+          <Link href="/profile/artist/createAlbum" passHref>
+            <ListItem>
+              <ListItemIcon>
+                <AddIcon sx={{ color: "#b3b3b3" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Add Album"
+                primaryTypographyProps={{ color: "#b3b3b3" }}
+              />
+            </ListItem>
+          </Link>
+        )}
+        {isAdmin && (
+          <Link href="/profile/admin/addAdmin" passHref>
+            <ListItem>
+              <ListItemIcon>
+                <AddIcon sx={{ color: "#b3b3b3" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Add Admin"
+                primaryTypographyProps={{ color: "#b3b3b3" }}
+              />
+            </ListItem>
+          </Link>
+        )}
       </List>
+
+      <ToastContainer />
     </Box>
   );
 };

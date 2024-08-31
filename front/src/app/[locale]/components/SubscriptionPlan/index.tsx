@@ -3,8 +3,15 @@ import { Subs } from "subs-widget";
 
 const Subscription = () => {
   const handleResponse = (response: { success: boolean; message: string }) => {
+<<<<<<< HEAD
     console.log("This is what happened", response);
   };
+=======
+    //TO DO
+    console.log("This is what happened", response);
+  };
+
+>>>>>>> front
   return (
     <Box
       sx={{
@@ -36,8 +43,9 @@ const Subscription = () => {
           Unlock gift and advantages with your favorite artist.
         </Typography>
         <Typography variant="h5" sx={{ margin: "20px 0" }}>
-          $9.99/month
+          1.99/month
         </Typography>
+<<<<<<< HEAD
         <Subs
           address={"0x6176d4666693933eF3a73ce38C28de54A611012D"}
           appId="24"
@@ -51,6 +59,32 @@ const Subscription = () => {
             payment: "Prenium",
             token: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
           }}
+=======
+        {/* <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "black",
+            color: "white",
+            "&:hover": { backgroundColor: "gray" },
+          }}
+        >
+          Subscribe Now
+        </Button> */}
+        <Subs
+          address={"0x6176d4666693933eF3a73ce38C28de54A611012D"}
+          appId="24"
+          chain={"bsct"}
+          mode="testnet"
+          apiKey="fr96nskplu06obzxtjfwmkswdhpfk9"
+          color="red"
+          width={200}
+          defaultPayment="Prenium"
+          choice={{
+            payment: "Prenium",
+            //address token payment
+            token: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+          }}
+>>>>>>> front
           dataOnSubs={handleResponse}
         />
       </Box>
