@@ -99,11 +99,41 @@ export class UserController {
 
     res.json(users);
   }
+  async getArtistInfoByAddress(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    const { address } = req.params; // Assuming you pass the artist's address as a URL parameter
+
+    try {
+      const user = await UserService.getInstance().getUserByArtistAddress(
+        address
+      );
+
+      if (!user) {
+        res.status(404).json({ message: "Artist not found" });
+        return;
+      }
+
+      res.json({
+        firstname: user.firstname,
+        lastname: user.lastname,
+        address: user.address,
+        email: user.email,
+        subscription: user.subscription,
+        banned: user.banned,
+      });
+    } catch (error) {
+      console.error("Error fetching artist information:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 
   buildRouter(): Router {
     const router = Router();
     router.get("/", this.getAllUsers.bind(this));
     router.get("/search", this.searchUsers.bind(this));
+    router.get("/artist/:address", this.getArtistInfoByAddress.bind(this));
     router.post("/create", this.createUser.bind(this));
     router.patch("/update/:id", this.updateUser.bind(this));
     router.delete("/:id", this.deleteUser.bind(this));

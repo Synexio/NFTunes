@@ -112,6 +112,17 @@ export class UserService {
 
     return query.exec();
   }
+  async getUserByArtistAddress(address: string): Promise<UserDocument | null> {
+    try {
+      const user = await UserModel.findOne({ address }).select(
+        "address firstname lastname email subscription"
+      );
+      return user;
+    } catch (error) {
+      console.error("Error fetching user by artist address:", error);
+      return null;
+    }
+  }
 }
 
 export interface UserCreate {

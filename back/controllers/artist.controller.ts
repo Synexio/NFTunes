@@ -54,6 +54,22 @@ export class ArtistController {
     }
     res.json(result);
   }
+  async updateArtist(req: express.Request, res: express.Response) {
+    const id = req.params.id;
+
+    const data = req.body;
+    const result = await ArtistService.getInstance().updateArtist(id, data);
+    if (result === ApiErrorCode.invalidParameters) {
+      res.status(400).end();
+      return;
+    }
+    if (result === ApiErrorCode.notFound) {
+      res.status(404).end();
+      return;
+    }
+    res.json(result);
+  }
+
   async searchArtist(req: express.Request, res: express.Response) {
     try {
       const limit = req.query.limit
@@ -85,6 +101,7 @@ export class ArtistController {
     router.post("/create", this.createArtist.bind(this));
     router.get("/:id", this.getArtistById.bind(this));
     router.delete("/:id", this.deleteArtist.bind(this));
+    router.patch("/:id", this.updateArtist.bind(this));
     return router;
   }
 }

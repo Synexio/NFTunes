@@ -34,6 +34,10 @@ const userSchema = new Schema(
       type: Schema.Types.String,
       // required: true,
     },
+    email: {
+      type: Schema.Types.String,
+      // required: true,
+    },
     banned: {
       type: Schema.Types.Boolean,
       default: false,

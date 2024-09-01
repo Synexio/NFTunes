@@ -2,12 +2,12 @@
 "use client";
 import React from "react";
 import Layout from "../../../components/Layout";
-import ConfirmArtistRegister from "@/app/[locale]/components/Admin/AddArtist";
+import ArtistManagement from "@/app/[locale]/components/Admin/ArtistManagement";
 
 const Home: React.FC = () => {
   return (
     <Layout>
-      <ConfirmArtistRegister />
+      <ArtistManagement />
     </Layout>
   );
 };

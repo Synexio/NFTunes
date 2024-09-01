@@ -56,6 +56,27 @@ export class ArtistService {
     const artists = await ArtistModel.find();
     return artists;
   }
+
+  async updateArtist(
+    id: string,
+    update: ArtistUpdate
+  ): Promise<ArtistDocument | ApiErrorCode> {
+    try {
+      if (!Types.ObjectId.isValid(id)) {
+        return ApiErrorCode.invalidParameters;
+      }
+      const user = await ArtistModel.findByIdAndUpdate(id, update, {
+        returnDocument: "after",
+      });
+      if (user === null) {
+        return ApiErrorCode.notFound;
+      }
+      return user;
+    } catch (error) {
+      return ApiErrorCode.failed;
+    }
+  }
+
   async searchArtist(
     search: ArtistSearch
   ): Promise<ArtistDocument[] | ApiErrorCode> {
@@ -97,4 +118,10 @@ export interface ArtistSearch {
   readonly currentReward?: string;
   readonly limit?: number;
   readonly offset?: number;
+}
+export interface ArtistUpdate {
+  readonly claimCount?: number;
+  readonly status?: string;
+  readonly currentReward?: string;
+  readonly album?: string[];
 }
