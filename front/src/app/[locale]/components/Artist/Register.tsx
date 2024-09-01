@@ -17,9 +17,9 @@ const Register: React.FC = () => {
       const artistData = {
         address: account?.address as string,
         claimCount: 0,
-        status: "inactif",
-        currentReward: "aucun",
-        album: ["66cc4370c0f59c2fc94b7525"],
+        status: "inactive",
+        currentReward: "none",
+        // album: [""],
       };
       const urlArtist = `${api}/artist/create`;
 
@@ -57,7 +57,7 @@ const Register: React.FC = () => {
         toast.error("Artist already exists!");
       }
     } catch (error) {
-      console.error("Error registering admin", error);
+      console.error("Error registering artist", error);
     }
   };
   return (

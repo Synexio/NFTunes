@@ -104,19 +104,19 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             </Link>
           </>
         )}
-        {isArtist && (
-          <Link href="/profile/artist/createAlbum" passHref>
-            <ListItem>
-              <ListItemIcon>
-                <AddIcon sx={{ color: "#b3b3b3" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Add Album"
-                primaryTypographyProps={{ color: "#b3b3b3" }}
-              />
-            </ListItem>
-          </Link>
-        )}
+        {/* {isArtist && ( */}
+        <Link href="/profile/artist/createAlbum" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <AddIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Add Album"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
+        {/* )} */}
         {isAdmin && (
           <>
             <Link href="/profile/admin/addAdmin" passHref>

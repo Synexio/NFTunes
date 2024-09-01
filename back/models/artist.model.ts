@@ -8,7 +8,7 @@ export interface ArtistProps {
   claimCount: number;
   status: string;
   currentReward: string;
-  album: AlbumProps[];
+  albums: AlbumProps[];
 }
 
 export type ArtistDocument = ArtistProps & Document;
@@ -33,7 +33,7 @@ const artistSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
-    album: [
+    albums: [
       {
         type: Schema.Types.ObjectId,
         ref: "Album",

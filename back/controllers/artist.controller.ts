@@ -25,6 +25,27 @@ export class ArtistController {
     }
     res.json(result);
   }
+  async getArtistByAddressAndUpdate(
+    req: express.Request,
+    res: express.Response
+  ) {
+    const address = req.params.address;
+    const data = req.body;
+
+    const result =
+      await ArtistService.getInstance().getArtistByAddressAndUpdate(
+        address,
+        data
+      );
+    if (result === ApiErrorCode.notFound) {
+      return res.status(404).json({ message: "Artist not found" });
+    }
+    if (result === ApiErrorCode.failed) {
+      console.error("Failed to retrieve artist:", address);
+      return res.status(500).json({ message: "Failed to retrieve artist" });
+    }
+    return res.json(result);
+  }
 
   async deleteArtist(req: express.Request, res: express.Response) {
     const id = req.params.id;
@@ -98,6 +119,10 @@ export class ArtistController {
     const router = express.Router(); //création d'un nouveau routeur
     router.get("/", this.getAllArtists.bind(this));
     router.get("/search", this.searchArtist.bind(this));
+    router.put(
+      "/address/:address",
+      this.getArtistByAddressAndUpdate.bind(this)
+    );
     router.post("/create", this.createArtist.bind(this));
     router.get("/:id", this.getArtistById.bind(this));
     router.delete("/:id", this.deleteArtist.bind(this));

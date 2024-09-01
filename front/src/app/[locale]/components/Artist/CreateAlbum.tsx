@@ -10,26 +10,77 @@ import {
   OutlinedInput,
   InputAdornment,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useActiveAccount } from "thirdweb/react";
+
+import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
+import { prepareContractCall } from "thirdweb";
+import { contract } from "../../context/contract";
 import AddIcon from "@mui/icons-material/Add";
 
 const AlbumPage: React.FC = () => {
+  const account = useActiveAccount();
+
   const [albumName, setAlbumName] = useState("");
   const [albumDescription, setAlbumDescription] = useState("");
-  const [albumCover, setAlbumCover] = useState<File | null>(null);
+  // const [albumCover, setAlbumCover] = useState<File | null>(null);
+  const api = process.env.NEXT_PUBLIC_API_URL;
 
-  const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setAlbumCover(event.target.files[0]);
+  // const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files.length > 0) {
+  //     setAlbumCover(event.target.files[0]);
+  //   }
+  // };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    try {
+      const requestData = {
+        name: albumName,
+        description: albumDescription,
+      };
+
+      const url = `${api}/album/create`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data._id);
+
+        // Fetch the current artist data to get the existing albums
+        // const artistResponse = await axios.get(
+        //   `${api}/artist/address/${account?.address}`
+        // );
+        // const artist = artistResponse.data;
+
+        // // Prepare the updated albums array
+        // const updatedAlbums = [...artist.album, data._id]; // Add the new album ID to the existing albums array
+
+        // Send the PUT request to update the artist's albums
+        const update = await axios.put(
+          `${api}/artist/address/${account?.address}`,
+          {
+            albums: [data._id.toString()], // Update with the new albums array
+          }
+        );
+        // if (update.ok) {
+        toast.success("Album created and artist updated!");
+        // }
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "An error occurred");
+      }
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      toast.error("An error occurred during the process.");
     }
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // Handle form submission
-    console.log("Album Name:", albumName);
-    console.log("Album Description:", albumDescription);
-    console.log("Album Cover:", albumCover);
   };
 
   return (
@@ -119,7 +170,7 @@ const AlbumPage: React.FC = () => {
           }}
         />
 
-        <Box sx={{ marginBottom: 3 }}>
+        {/* <Box sx={{ marginBottom: 3 }}>
           <InputLabel sx={{ color: "#888" }}>Album Cover</InputLabel>
           <OutlinedInput
             type="file"
@@ -144,7 +195,7 @@ const AlbumPage: React.FC = () => {
               },
             }}
           />
-        </Box>
+        </Box> */}
 
         <Button
           variant="contained"

@@ -29,6 +29,35 @@ export class ArtistService {
       return ApiErrorCode.invalidParameters;
     }
   }
+  async getArtistByAddressAndUpdate(
+    address: string,
+    update: ArtistUpdate
+  ): Promise<ArtistDocument | ApiErrorCode> {
+    try {
+      const artist = await ArtistModel.findOneAndUpdate(
+        { address: address },
+        {
+          $push: { albums: { $each: update.albums } },
+          $set: {
+            claimCount: update.claimCount,
+            status: update.status,
+            currentReward: update.currentReward,
+          },
+        },
+
+        {
+          returnDocument: "after",
+        }
+      );
+      if (artist === null) {
+        return ApiErrorCode.notFound;
+      }
+      return artist;
+    } catch (error) {
+      console.error("Error fetching artist:", error); // Log the error
+      return ApiErrorCode.failed;
+    }
+  }
 
   async deleteArtist(id: string): Promise<ApiErrorCode> {
     if (!Types.ObjectId.isValid(id)) {
@@ -123,5 +152,5 @@ export interface ArtistUpdate {
   readonly claimCount?: number;
   readonly status?: string;
   readonly currentReward?: string;
-  readonly album?: string[];
+  readonly albums?: string[];
 }

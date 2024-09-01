@@ -6,6 +6,7 @@ import { useSendTransaction } from "thirdweb/react";
 import AdminGuard from "./AdminGuard";
 import { prepareContractCall } from "thirdweb";
 import { contract } from "../../context/contract";
+import { useActiveAccount } from "thirdweb/react";
 
 const AddAdminPage: React.FC = () => {
   const api = process.env.NEXT_PUBLIC_API_URL;
@@ -13,12 +14,13 @@ const AddAdminPage: React.FC = () => {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const account = useActiveAccount();
 
   const { mutate: sendTransaction } = useSendTransaction();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    console.log(account);
     try {
       // const requestData = {
       //   address: address,

@@ -11,21 +11,18 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import axios from "axios";
+import AdminGuard from "./AdminGuard";
 
 interface Artist {
   _id: string;
   address: string;
-  firstname: string;
-  lastname: string;
-  email: string;
   status: string;
-  claimCount: number;
-  currentReward: string;
 }
 
 interface User {
   firstname: string;
   lastname: string;
+  email: string;
 }
 
 interface VerifyArtistProps {
@@ -98,6 +95,7 @@ const VerifyArtist: React.FC<VerifyArtistProps> = ({ showConfirmed }) => {
 
   const handleConfirmArtists = async () => {
     try {
+      toast.success("Admin enregistré !");
       const promises = selectedArtists.map((artistId) =>
         fetch(`${api}/artist/${artistId}`, {
           method: "PATCH",
@@ -127,130 +125,132 @@ const VerifyArtist: React.FC<VerifyArtistProps> = ({ showConfirmed }) => {
     }
   };
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        backgroundColor: "#121212",
-        color: "white",
-        padding: 4,
-        width: "100%", // Ensure full width of parent
-        overflow: "hidden", // Prevent overflow of parent
-      }}
-    >
+    <AdminGuard>
       <Box
         sx={{
-          overflowY: "auto", // Enable scrolling for the table container
-          maxHeight: "400px", // Set maximum height for the table container
-          width: "100%", // Make the table container full width
-          border: "1px solid #333", // Optional: add border for visibility
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: "#121212",
+          color: "white",
+          padding: 4,
+          width: "100%",
+          overflow: "hidden",
         }}
       >
-        <Table
+        <Box
           sx={{
-            backgroundColor: "#1f1f1f",
-            borderRadius: 2,
-            width: "100%", // Set the table width to full
-            tableLayout: "fixed", // Use fixed layout to enforce cell widths
+            overflowY: "auto", // Enable scrolling for the table container
+            maxHeight: "400px",
+            width: "100%",
+            border: "1px solid #333",
           }}
         >
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ color: "white", width: "50px" }}>
-                Select
-              </TableCell>
-              <TableCell sx={{ color: "white", width: "150px" }}>
-                Address
-              </TableCell>
-              <TableCell sx={{ color: "white", width: "100px" }}>
-                First Name
-              </TableCell>
-              <TableCell sx={{ color: "white", width: "100px" }}>
-                Last Name
-              </TableCell>
-              <TableCell sx={{ color: "white", width: "200px" }}>
-                Email
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {artists.map((artist) => {
-              const userInfo = userDetails[artist.address] || {};
-              return (
-                <TableRow key={artist._id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedArtists.includes(artist._id)}
-                      onChange={() => handleSelectArtist(artist._id)}
-                      sx={{ color: "white" }}
-                    />
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {artist.address}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {userInfo.firstname || "N/A"}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {userInfo.lastname || "N/A"}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: "white",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {artist.email}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Box>
+          <Table
+            sx={{
+              backgroundColor: "#1f1f1f",
+              borderRadius: 2,
+              width: "100%",
+              tableLayout: "fixed",
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ color: "white", width: "50px" }}>
+                  Select
+                </TableCell>
+                <TableCell sx={{ color: "white", width: "150px" }}>
+                  Address
+                </TableCell>
+                <TableCell sx={{ color: "white", width: "100px" }}>
+                  First Name
+                </TableCell>
+                <TableCell sx={{ color: "white", width: "100px" }}>
+                  Last Name
+                </TableCell>
+                <TableCell sx={{ color: "white", width: "200px" }}>
+                  Email
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {artists.map((artist) => {
+                const userInfo = userDetails[artist.address] || {};
+                return (
+                  <TableRow key={artist._id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedArtists.includes(artist._id)}
+                        onChange={() => handleSelectArtist(artist._id)}
+                        sx={{ color: "white" }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: "white",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {artist.address}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: "white",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {userInfo.firstname || "N/A"}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: "white",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {userInfo.lastname || "N/A"}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: "white",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {userInfo.email}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Box>
 
-      {!showConfirmed && (
-        <Button
-          variant="contained"
-          onClick={handleConfirmArtists}
-          disabled={selectedArtists.length === 0}
-          sx={{
-            backgroundColor: "#b3b3b3",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "gray",
-            },
-            marginTop: 2, // Add some spacing above the button
-          }}
-        >
-          Confirm Selected Artists
-        </Button>
-      )}
-    </Box>
+        {!showConfirmed && (
+          <Button
+            variant="contained"
+            onClick={handleConfirmArtists}
+            disabled={selectedArtists.length === 0}
+            sx={{
+              backgroundColor: "#b3b3b3",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "gray",
+              },
+              marginTop: 2,
+            }}
+          >
+            Confirm Selected Artists
+          </Button>
+        )}
+      </Box>
+    </AdminGuard>
   );
 };
 
