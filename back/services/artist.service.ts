@@ -56,12 +56,45 @@ export class ArtistService {
     const artists = await ArtistModel.find();
     return artists;
   }
-}
+  async searchArtist(
+    search: ArtistSearch
+  ): Promise<ArtistDocument[] | ApiErrorCode> {
+    const filter: FilterQuery<ArtistDocument> = {};
 
+    if (search.address !== undefined) {
+      filter.address = { $regex: search.address, $options: "i" };
+    }
+    if (search.status !== undefined) {
+      filter.status = { $regex: search.status, $options: "i" };
+    }
+    if (search.currentReward !== undefined) {
+      filter.currentReward = { $regex: search.currentReward, $options: "i" }; // This was previously incorrect
+    }
+
+    const query = ArtistModel.find(filter);
+
+    if (search.limit !== undefined) {
+      query.limit(search.limit);
+    }
+    if (search.offset !== undefined) {
+      query.skip(search.offset);
+    }
+
+    return query.exec();
+  }
+}
 export interface ArtistCreate {
   readonly address: string;
   readonly claimCount: number;
   readonly status: string;
   readonly currentReward: string;
   readonly album: string[];
+}
+
+export interface ArtistSearch {
+  readonly address?: string;
+  readonly status?: string;
+  readonly currentReward?: string;
+  readonly limit?: number;
+  readonly offset?: number;
 }

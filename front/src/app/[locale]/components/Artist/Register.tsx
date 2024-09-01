@@ -32,7 +32,6 @@ const Register: React.FC = () => {
       });
       if (responseArtist.ok) {
         const createdArtist = await responseArtist.json();
-        console.log("Created Artist ID:", createdArtist._id);
         const userData = {
           address: account?.address as string,
           lastname: lastname,

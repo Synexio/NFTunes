@@ -54,10 +54,34 @@ export class ArtistController {
     }
     res.json(result);
   }
+  async searchArtist(req: express.Request, res: express.Response) {
+    try {
+      const limit = req.query.limit
+        ? Number.parseInt(req.query.limit as string)
+        : 20;
+      const offset = req.query.offset
+        ? Number.parseInt(req.query.offset as string)
+        : 0;
+
+      const artists = await ArtistService.getInstance().searchArtist({
+        address: req.query.address as string,
+        status: req.query.status as string,
+        currentReward: req.query.currentReward as string, // There was a typo here
+        limit: limit,
+        offset: offset,
+      });
+
+      res.json(artists);
+    } catch (error) {
+      console.error("Error searching for artists:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
 
   buildRouter(): express.Router {
     const router = express.Router(); //création d'un nouveau routeur
     router.get("/", this.getAllArtists.bind(this));
+    router.get("/search", this.searchArtist.bind(this));
     router.post("/create", this.createArtist.bind(this));
     router.get("/:id", this.getArtistById.bind(this));
     router.delete("/:id", this.deleteArtist.bind(this));

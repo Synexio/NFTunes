@@ -22,7 +22,6 @@ interface SidebarProps {
 const Sidebar = ({ setActivePage }: SidebarProps) => {
   const account = useActiveAccount();
   const { isAdmin, isArtist, walletAddress } = useUserRole(account);
-
   return (
     <Box
       sx={{
@@ -78,28 +77,33 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             />
           </ListItem>
         </Link>
-        <Link href="/subscription" passHref>
-          <ListItem>
-            <ListItemIcon>
-              <FavoriteIcon sx={{ color: "#b3b3b3" }} />
-            </ListItemIcon>
-            <ListItemText
-              primary="Subscribe"
-              primaryTypographyProps={{ color: "#b3b3b3" }}
-            />
-          </ListItem>
-        </Link>
-        <Link href="/profile/artist/register" passHref>
-          <ListItem>
-            <ListItemIcon>
-              <LibraryAddIcon sx={{ color: "#b3b3b3" }} />
-            </ListItemIcon>
-            <ListItemText
-              primary="I'm a talented ARTIST ⭐️"
-              primaryTypographyProps={{ color: "#b3b3b3" }}
-            />
-          </ListItem>
-        </Link>
+        {!isAdmin && (
+          <>
+            <Link href="/subscription" passHref>
+              <ListItem>
+                <ListItemIcon>
+                  <FavoriteIcon sx={{ color: "#b3b3b3" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Subscribe"
+                  primaryTypographyProps={{ color: "#b3b3b3" }}
+                />
+              </ListItem>
+            </Link>
+
+            <Link href="/profile/artist/register" passHref>
+              <ListItem>
+                <ListItemIcon>
+                  <LibraryAddIcon sx={{ color: "#b3b3b3" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="I'm a talented ARTIST ⭐️"
+                  primaryTypographyProps={{ color: "#b3b3b3" }}
+                />
+              </ListItem>
+            </Link>
+          </>
+        )}
         {isArtist && (
           <Link href="/profile/artist/createAlbum" passHref>
             <ListItem>
@@ -126,7 +130,7 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
                 />
               </ListItem>
             </Link>
-            <Link href="/profile/admin/addAdmin" passHref>
+            <Link href="/profile/admin/listArtist" passHref>
               <ListItem>
                 <ListItemIcon>
                   <FormatListBulletedIcon sx={{ color: "#b3b3b3" }} />
