@@ -1,7 +1,6 @@
 import { UserDocument, UserModel, UserProps } from "../models";
 import { ApiErrorCode } from "../api-error-code.enum";
-import { SecurityUtils } from "../utils";
-import { Types } from "mongoose";
+import { Types, FilterQuery } from "mongoose";
 
 export class UserService {
   private static instance: UserService;
@@ -75,6 +74,44 @@ export class UserService {
       return ApiErrorCode.failed;
     }
   }
+  async searchUsers(
+    search: UserSearch
+  ): Promise<UserDocument[] | ApiErrorCode> {
+    const filter: FilterQuery<UserDocument> = {};
+
+    if (search.address !== undefined) {
+      filter.address = { $regex: search.address, $options: "i" };
+    }
+    if (search.firstname !== undefined) {
+      filter.firstname = { $regex: search.firstname, $options: "i" };
+    }
+    if (search.lastname !== undefined) {
+      filter.lastname = { $regex: search.lastname, $options: "i" };
+    }
+    if (search.email !== undefined) {
+      filter.email = { $regex: search.email, $options: "i" };
+    }
+    if (search.subscription !== undefined) {
+      filter.subscription = { $regex: search.subscription, $options: "i" };
+    }
+    if (search.role !== undefined) {
+      filter.role = { $regex: search.role, $options: "i" };
+    }
+    if (search.banned !== undefined) {
+      filter.banned = search.banned;
+    }
+
+    const query = UserModel.find(filter);
+
+    if (search.limit !== undefined) {
+      query.limit(search.limit);
+    }
+    if (search.offset !== undefined) {
+      query.skip(search.offset);
+    }
+
+    return query.exec();
+  }
 }
 
 export interface UserCreate {
@@ -86,7 +123,18 @@ export interface UserCreate {
   readonly like: string[];
   readonly follow: string[];
   readonly subscription: string;
-  readonly role: string[];
+  readonly role: string;
+}
+export interface UserSearch {
+  readonly address?: string;
+  readonly firstname?: string;
+  readonly lastname?: string;
+  readonly email?: string;
+  readonly banned?: boolean;
+  readonly subscription?: string;
+  readonly role?: string;
+  readonly limit?: number;
+  readonly offset?: number;
 }
 
 export interface UserUpdate {
@@ -97,5 +145,5 @@ export interface UserUpdate {
   readonly like?: string[];
   readonly follow?: string[];
   readonly subscription?: string;
-  readonly role?: string[];
+  readonly role?: string;
 }

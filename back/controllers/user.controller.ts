@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { UserService } from "../services";
 import { ApiErrorCode } from "../api-error-code.enum";
+import * as express from "express";
 
 export class UserController {
   private static instance: UserController;
@@ -14,7 +15,7 @@ export class UserController {
     return UserController.instance;
   }
 
-  async createUser(req: Request, res: Response): Promise<void> {
+  async createUser(req: express.Request, res: express.Response): Promise<void> {
     const data = req.body;
     const result = await UserService.getInstance().createUser(data);
     if (result === ApiErrorCode.invalidParameters) {
@@ -22,13 +23,13 @@ export class UserController {
       return;
     }
     if (result === ApiErrorCode.alreadyExists) {
-      res.status(409).end(); // CONFLICT
+      res.status(409).end();
       return;
     }
     res.json(result);
   }
 
-  async updateUser(req: Request, res: Response) {
+  async updateUser(req: express.Request, res: express.Response) {
     const id = req.params.id;
 
     const data = req.body;
@@ -44,7 +45,7 @@ export class UserController {
     res.json(result);
   }
 
-  async deleteUser(req: Request, res: Response) {
+  async deleteUser(req: express.Request, res: express.Response) {
     const id = req.params.id;
     const result = await UserService.getInstance().deleteUser(id);
     if (result === ApiErrorCode.notFound) {
@@ -58,7 +59,7 @@ export class UserController {
     res.status(204).end();
   }
 
-  async getUserById(req: Request, res: Response) {
+  async getUserById(req: express.Request, res: express.Response) {
     const id = req.params.id;
     const result = await UserService.getInstance().getUserById(id);
     if (result === null) {
@@ -68,7 +69,7 @@ export class UserController {
     res.json(result);
   }
 
-  async getAllUsers(req: Request, res: Response) {
+  async getAllUsers(req: express.Request, res: express.Response) {
     const result = await UserService.getInstance().getAllUsers();
     if (result === null) {
       res.status(404).end();
@@ -76,10 +77,33 @@ export class UserController {
     }
     res.json(result);
   }
+  async searchUsers(req: Request, res: Response): Promise<void> {
+    const limit = req.query.limit
+      ? Number.parseInt(req.query.limit as string)
+      : 20;
+    const offset = req.query.offset
+      ? Number.parseInt(req.query.offset as string)
+      : 0;
+
+    const users = await UserService.getInstance().searchUsers({
+      address: req.query.address as string,
+      firstname: req.query.firstname as string,
+      lastname: req.query.lastname as string,
+      email: req.query.email as string,
+      banned: req.query.banned === "true", // Convert string to boolean
+      subscription: req.query.subscription as string,
+      role: req.query.role as string,
+      limit: limit,
+      offset: offset,
+    });
+
+    res.json(users);
+  }
 
   buildRouter(): Router {
     const router = Router();
     router.get("/", this.getAllUsers.bind(this));
+    router.get("/search", this.searchUsers.bind(this));
     router.post("/create", this.createUser.bind(this));
     router.patch("/update/:id", this.updateUser.bind(this));
     router.delete("/:id", this.deleteUser.bind(this));
