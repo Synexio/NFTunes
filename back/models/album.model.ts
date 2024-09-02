@@ -5,9 +5,8 @@ export interface AlbumProps {
   _id: string;
   address: string;
   name: string;
-  description: string;
-  img: string;
   author: string;
+  img: string;
   titles: string[];
 }
 
@@ -23,9 +22,6 @@ const albumSchema = new Schema(
     name: {
       type: Schema.Types.String,
       required: true,
-    },
-    description: {
-      type: Schema.Types.String,
     },
     img: {
       type: Schema.Types.String,

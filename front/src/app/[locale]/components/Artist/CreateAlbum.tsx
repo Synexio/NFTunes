@@ -1,85 +1,70 @@
-// pages/album.tsx
 import React, { useState } from "react";
 import {
   Box,
   Typography,
   Button,
   TextField,
-  IconButton,
   InputLabel,
   OutlinedInput,
   InputAdornment,
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useActiveAccount } from "thirdweb/react";
-
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
-import { prepareContractCall } from "thirdweb";
-import { contract } from "../../context/contract";
-import AddIcon from "@mui/icons-material/Add";
+import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 
-const AlbumPage: React.FC = () => {
-  const account = useActiveAccount();
-
+const CreateAlbum: React.FC = () => {
   const [albumName, setAlbumName] = useState("");
-  const [albumDescription, setAlbumDescription] = useState("");
-  // const [albumCover, setAlbumCover] = useState<File | null>(null);
+  const [author, setAuthor] = useState("");
+  const [albumImgFile, setAlbumImgFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
   const api = process.env.NEXT_PUBLIC_API_URL;
 
-  // const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     setAlbumCover(event.target.files[0]);
-  //   }
-  // };
+  const handleAlbumImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setAlbumImgFile(event.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (!albumName || !author || !albumImgFile) {
+      toast.error(
+        "Please fill out all fields and upload both audio and album cover files."
+      );
+      return;
+    }
+
+    setLoading(true);
     try {
-      const requestData = {
-        name: albumName,
-        description: albumDescription,
-      };
+      const formData = new FormData();
+      formData.append("name", albumName);
+      formData.append("author", author);
+      formData.append("img", albumImgFile);
 
       const url = `${api}/album/create`;
-      const response = await fetch(url, {
-        method: "POST",
+      const response = await axios.post(url, formData, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify(requestData),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data._id);
-
-        // Fetch the current artist data to get the existing albums
-        // const artistResponse = await axios.get(
-        //   `${api}/artist/address/${account?.address}`
-        // );
-        // const artist = artistResponse.data;
-
-        // // Prepare the updated albums array
-        // const updatedAlbums = [...artist.album, data._id]; // Add the new album ID to the existing albums array
-
-        // Send the PUT request to update the artist's albums
-        const update = await axios.put(
-          `${api}/artist/address/${account?.address}`,
-          {
-            albums: [data._id.toString()], // Update with the new albums array
-          }
-        );
-        // if (update.ok) {
-        toast.success("Album created and artist updated!");
-        // }
+      if (response.status === 200) {
+        toast.success("Album created successfully!");
+        console.log("Album ID:", response.data._id);
+        // Reset form fields
+        setAlbumName("");
+        setAuthor("");
+        setAlbumImgFile(null);
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "An error occurred");
+        toast.error("An error occurred while creating the album.");
       }
     } catch (error) {
       console.error("Error in handleSubmit:", error);
       toast.error("An error occurred during the process.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,11 +128,9 @@ const AlbumPage: React.FC = () => {
         <TextField
           fullWidth
           variant="outlined"
-          label="Album Description"
-          multiline
-          rows={4}
-          value={albumDescription}
-          onChange={(e) => setAlbumDescription(e.target.value)}
+          label="Author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
           sx={{
             marginBottom: 3,
             "& .MuiOutlinedInput-root": {
@@ -169,12 +152,11 @@ const AlbumPage: React.FC = () => {
             style: { color: "white" },
           }}
         />
-
-        {/* <Box sx={{ marginBottom: 3 }}>
-          <InputLabel sx={{ color: "#888" }}>Album Cover</InputLabel>
+        <Box sx={{ marginBottom: 3 }}>
+          <InputLabel sx={{ color: "#888" }}>Upload Album Cover</InputLabel>
           <OutlinedInput
             type="file"
-            onChange={handleCoverChange}
+            onChange={handleAlbumImgChange}
             startAdornment={
               <InputAdornment position="start">
                 <ImageIcon sx={{ color: "white" }} />
@@ -195,42 +177,27 @@ const AlbumPage: React.FC = () => {
               },
             }}
           />
-        </Box> */}
+        </Box>
 
         <Button
           variant="contained"
           type="submit"
           fullWidth
+          disabled={loading}
           sx={{
-            backgroundColor: "#b3b3b3",
+            backgroundColor: loading ? "#ccc" : "#b3b3b3",
             color: "white",
             "&:hover": {
               backgroundColor: "gray",
             },
           }}
         >
-          Create Album
+          {loading ? "Adding..." : "Add Album"}
         </Button>
       </Box>
-
-      {/* <Button
-        variant="outlined"
-        startIcon={<AddIcon />}
-        sx={{
-          marginTop: 4,
-          color: "#1db954",
-          borderColor: "#1db954",
-          "&:hover": {
-            backgroundColor: "#1ed760",
-            borderColor: "#1ed760",
-            color: "white",
-          },
-        }}
-      >
-        Add Song to Album
-      </Button> */}
+      <ToastContainer />
     </Box>
   );
 };
 
-export default AlbumPage;
+export default CreateAlbum;

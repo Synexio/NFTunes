@@ -1,4 +1,3 @@
-// src/app/home/page.tsx
 "use client";
 import React from "react";
 import Layout from "../../../components/Layout";

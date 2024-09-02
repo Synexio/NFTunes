@@ -1,15 +1,8 @@
-import {
-  AlbumDocument,
-  AlbumModel,
-  TitleDocument,
-  TitleModel,
-  TitleProps,
-} from "../models";
-import { FilterQuery, Types } from "mongoose";
+import { AlbumDocument, AlbumModel } from "../models";
+import { Types } from "mongoose";
 import { ApiErrorCode } from "../api-error-code.enum";
 
 export class AlbumService {
-  // Singleton
   private static instance: AlbumService;
 
   private constructor() {}
@@ -63,8 +56,9 @@ export class AlbumService {
 }
 
 export interface AlbumCreate {
-  readonly address: string;
-  readonly titles: string[];
+  readonly address?: string | null;
   readonly name: string;
-  readonly description: string;
+  readonly author: string;
+  readonly img: string;
+  readonly titles?: string[] | null;
 }
