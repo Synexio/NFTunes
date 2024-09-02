@@ -35,11 +35,13 @@ export const Player = ({
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [musics, setMusics] = useState<Music[]>([]);
+  const [points, setPoints] = useState<number>(0); // New state for tracking points
   const api = process.env.NEXT_PUBLIC_API_URL;
 
   const audioTag = useRef<HTMLAudioElement | null>(null);
   const progressBar = useRef<HTMLInputElement | null>(null);
   const animationRef = useRef<number>(0);
+  const pointIntervalRef = useRef<NodeJS.Timeout | null>(null); // Ref to store interval ID
 
   // Fetch music data
   useEffect(() => {
@@ -65,10 +67,30 @@ export const Player = ({
         audioTag.current.volume = volume;
         audioTag.current.muted = isMuted;
         audioTag.current.play();
+
+        // Start awarding points every 10 seconds
+        if (!pointIntervalRef.current) {
+          pointIntervalRef.current = setInterval(() => {
+            setPoints((prevPoints) => prevPoints + 1);
+          }, 10000);
+        }
       } else {
         audioTag.current.pause();
+
+        // Stop awarding points when paused
+        if (pointIntervalRef.current) {
+          clearInterval(pointIntervalRef.current);
+          pointIntervalRef.current = null;
+        }
       }
     }
+
+    // Cleanup the interval when component unmounts or when _id changes
+    return () => {
+      if (pointIntervalRef.current) {
+        clearInterval(pointIntervalRef.current);
+      }
+    };
   }, [isPlaying, volume, isMuted, _id]);
 
   // Handle metadata loaded
@@ -142,7 +164,6 @@ export const Player = ({
           <p>No music available</p>
         )}
       </div>
-
       <div className="player">
         <div className="progressContainer">
           {windowWidth >= 830 || isFull ? (
@@ -170,7 +191,6 @@ export const Player = ({
           </div>
         </div>
       </div>
-
       <div className="volumeControls">
         {windowWidth > 825 && (
           <>
@@ -196,6 +216,8 @@ export const Player = ({
           </>
         )}
       </div>
+      <div className="pointsDisplay">Points: {points}</div>{" "}
+      {/* Display points */}
     </C.Container>
   );
 };
