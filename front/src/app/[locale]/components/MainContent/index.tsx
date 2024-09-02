@@ -1,41 +1,45 @@
 import { useEffect, useState } from "react";
-import { Box, IconButton, Typography } from "@mui/material";
-import axios from "axios";
+import { Box, Grid, Typography } from "@mui/material";
 import { Player } from "../Player";
-import { Menu } from "../../svgs";
-import SongsSection from "./Songs";
-import AlbumsSection from "./Albums";
+import { toast } from "react-toastify";
+import axios from "axios";
+
+interface Music {
+  _id: string;
+  name: string;
+  author: string;
+  genre: string;
+  audio: string;
+  album_img: string;
+  tokenId: number;
+}
 
 function MainContent() {
-  const [id, setId] = useState<string>("");
+  const [_id, setId] = useState<string>("");
   const [isFull, setIsFull] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-  const [isSidebar, setIsSidebar] = useState<boolean>(false);
-  const [musics, setMusics] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [musics, setMusics] = useState<Music[]>([]);
 
   const api = process.env.NEXT_PUBLIC_API_URL;
 
+  // Handle window resizing
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Fetch all music titles
+  // Fetch music data
   useEffect(() => {
     const fetchMusics = async () => {
-      setLoading(true);
       try {
         const response = await axios.get(`${api}/title/`);
         setMusics(response.data);
+        console.log("Fetched music data:", response.data); // Log the fetched data
       } catch (err) {
         console.error(err);
-        setError("Failed to fetch music data");
-      } finally {
-        setLoading(false);
+        toast.error("Failed to fetch music data");
       }
     };
 
@@ -52,33 +56,71 @@ function MainContent() {
         marginBottom: 30,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
-        {windowWidth <= 820 && (
-          <IconButton onClick={() => setIsSidebar(!isSidebar)}>
-            <Menu />
-          </IconButton>
-        )}
-        <Typography variant="h4" sx={{ fontWeight: "bold", width: "100%" }}>
-          Music Library
-        </Typography>
-      </Box>
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: "bold",
+          textAlign: "center",
+          marginBottom: 4,
+          width: "100%",
+        }}
+      >
+        All Songs
+      </Typography>
+      <Grid container spacing={2} sx={{ justifyContent: "flex-start" }}>
+        {musics
+          .filter(
+            (music) =>
+              music.name.toLowerCase().includes(search.toLowerCase()) ||
+              music.author.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((music) => (
+            <Grid item xs={6} sm={4} md={3} key={music._id}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  backgroundColor: "#1e1e1e",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  cursor: "pointer",
+                  "&:hover": {
+                    boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)",
+                  },
+                }}
+                onClick={() => setId(music._id)} // Set the selected music ID
+              >
+                <img
+                  src={music.album_img}
+                  alt={music.name}
+                  style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+                />
+                <Typography
+                  variant="subtitle1"
+                  sx={{ marginTop: 1, color: "#ffffff" }}
+                >
+                  {music.name}
+                </Typography>
+                <Typography variant="subtitle2" sx={{ color: "#b3b3b3" }}>
+                  {music.author}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+      </Grid>
 
-      {loading && <Typography>Loading...</Typography>}
-      {error && <Typography color="error">{error}</Typography>}
-
-      <SongsSection setId={setId} />
-
-      {/* Pass the music array to the Player component */}
-      <Player
-        id={id}
-        setId={setId}
-        setIsFull={setIsFull}
-        isFull={isFull}
-        windowWidth={windowWidth}
-        musics={musics}
-        setIsPlaying={setIsPlaying}
-        isPlaying={isPlaying}
-      />
+      {_id && (
+        <Player
+          _id={_id}
+          setId={setId}
+          setIsFull={setIsFull}
+          isFull={isFull}
+          windowWidth={windowWidth}
+        />
+      )}
     </Box>
   );
 }
