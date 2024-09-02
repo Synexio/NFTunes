@@ -28,6 +28,7 @@ const SearchPage = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        marginBottom: 30,
       }}
     >
       <Typography variant="h4" gutterBottom>

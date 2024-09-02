@@ -4,9 +4,14 @@ import cors from "cors";
 import * as bodyParser from "body-parser";
 import mongoose from "mongoose";
 import express from "express";
+import path from "path";
 
 import {
-  AlbumController, ArtistController, SubsController, TitleController, UserController,
+  AlbumController,
+  ArtistController,
+  SubsController,
+  TitleController,
+  UserController,
 } from "./controllers";
 
 async function startServer(): Promise<void> {
@@ -18,17 +23,15 @@ async function startServer(): Promise<void> {
   });
   const app = express();
   app.use(cors());
-  // app.use((req, res, next) => {
-  //   res.header(
-  //     "Access-Control-Allow-Origin, *",
-  //     "Origin, X-Requested-with, Content_Type,Accept,Authorization"
-  //   );
-  //   if (req.method === "OPTIONS") {
-  //     res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
-  //     return res.status(200).json({});
-  //   }
-  //   next();
-  // });
+  app.use(
+    "/music",
+    express.static(path.join(__dirname, "../front/public/music"))
+  ); // Correct path to music
+  app.use(
+    "/imgs",
+    express.static(path.join(__dirname, "../front/public/imgs"))
+  ); // Correct path to images
+
   app.use(bodyParser.json());
   app.use("/album", AlbumController.getInstance().buildRouter());
   app.use("/title", TitleController.getInstance().buildRouter());
