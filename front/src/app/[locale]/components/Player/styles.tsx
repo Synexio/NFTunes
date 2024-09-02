@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const Container = styled.div<{ isFull: boolean }>`
   display: flex;
+  justify-content: space-between; /* Distribute space between items */
+  align-items: center; /* Center items vertically */
   background-color: #16171a;
   width: 100%;
   height: 14vh;
@@ -9,137 +11,93 @@ export const Container = styled.div<{ isFull: boolean }>`
   bottom: 0; /* Align to the bottom */
   left: 0;
   z-index: 1000; /* Ensure it's above other elements */
-  align-items: center;
   box-shadow: 0px -1px 7px #16171aa0;
 
   .musicDiv {
-    width: 400px;
-    margin-top: 5px;
-    cursor: pointer;
-  }
-
-  .test {
-    width: 400px;
     display: flex;
-    align-items: center;
-    justify-content: end;
-
-    input {
-      appearance: none;
-      border-radius: 10px;
-      width: 120px;
-      background-color: #494a4d;
-      height: 5px;
-      outline: none;
-      margin-right: 15px;
-    }
-    input::-webkit-slider-thumb {
-      appearance: none;
-      height: 14px;
-      width: 14px;
-      background-color: #fff;
-      border-radius: 50%;
-    }
-    .volumeButton {
-      background-color: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-    }
-  }
-
-  .playPause {
-    margin: 0 5px;
+    align-items: center; /* Center items vertically */
+    width: 400px; /* Fixed width for music details */
+    margin-left: 10px; /* Add some margin on the left */
+    cursor: pointer;
   }
 
   .music {
     display: flex;
-    color: #fff;
-    align-items: center;
+    align-items: center; /* Center the image and text vertically */
     margin-left: 5px;
 
-    h1 {
-      font-size: 18px;
-      margin-bottom: 2px;
-    }
-    h3 {
-      margin-top: 0px;
-      font-size: 14px;
-      color: #b5b5b5;
-    }
-
-    div {
-      margin-left: 8px;
-    }
     img {
       width: 70px;
       height: 65px;
+      margin-right: 10px; /* Space between image and text */
+    }
+
+    .musicDetails {
+      display: flex;
+      flex-direction: column; /* Stack the name and author vertically */
+      color: #fff;
+
+      h1 {
+        font-size: 18px;
+        margin: 0; /* Remove default margin */
+      }
+      h3 {
+        font-size: 14px;
+        color: #b5b5b5;
+        margin: 0; /* Remove default margin */
+      }
     }
   }
 
   .player {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Center the progress bar and buttons */
     align-items: center;
-    width: 100%;
-    margin: auto;
-
-    button {
-      border: none;
-      outline: none;
-      border-radius: 50%;
-      background-color: transparent;
-      cursor: pointer;
-    }
-
-    .randomMusicsButton {
-      position: relative;
-      right: 25px;
-    }
+    flex-grow: 1; /* Allow this to take up remaining space */
+    margin: 0 20px; /* Add some margin on the sides */
   }
 
-  .inputButtons {
+  .progressContainer {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .buttons {
-    display: flex;
-    width: 225px;
-    position: relative;
-    bottom: 18px;
+    align-items: center; /* Center items vertically */
   }
 
   .progressBar {
     display: flex;
-    align-items: center;
-    width: 100%;
-    position: relative;
-    bottom: 8px;
-    right: 10px;
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center the progress bar */
 
-    .Pduration {
-      position: relative;
-      left: 15px;
-      color: #fff;
-      font-size: 14px;
-    }
+    .Pduration,
     .PcurrentTime {
-      position: relative;
-      right: 10px;
       color: #fff;
-      width: 35px;
       font-size: 14px;
     }
   }
-  .currentProgress {
-    --seek-before-width: 0px;
 
+  .buttons {
+    margin-left: 10px; /* Space between progress bar and play button */
+  }
+
+  .volumeControls {
+    display: flex;
+    align-items: center; /* Center volume controls */
+    margin-right: 10px; /* Add some margin on the right */
+  }
+
+  .volumeButton {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-right: 5px; /* Space between button and range input */
+  }
+
+  .currentProgress {
+    /* Styles for the progress bar */
+    --seek-before-width: 0px;
     appearance: none;
     border-radius: 10px;
-    width: 380px;
-    margin: auto;
+    width: 200px; /* Adjusted width for better responsiveness */
     background-color: #494a4d;
     height: 5px;
     outline: none;
@@ -162,34 +120,7 @@ export const Container = styled.div<{ isFull: boolean }>`
     }
   }
 
-  @media only screen and (max-width: 820px) {
-    .buttons {
-      top: 0;
-      right: 5%;
-    }
-    .progressBar {
-      display: flex;
-      align-items: center;
-      width: 88vw;
-      position: relative;
-      bottom: 0px;
-      right: -10%;
-
-      input {
-        margin: 0;
-      }
-    }
-  }
-
   @media only screen and (max-width: 575px) {
-    .progressBar {
-      right: 30px;
-    }
-    .buttons {
-      width: 147px;
-      top: 0px;
-      right: 0;
-      left: ${(props) => (props.isFull ? "-18" : "0")}%;
-    }
+    /* Add any media queries as necessary */
   }
 `;

@@ -36,7 +36,6 @@ function MainContent() {
       try {
         const response = await axios.get(`${api}/title/`);
         setMusics(response.data);
-        console.log("Fetched music data:", response.data); // Log the fetched data
       } catch (err) {
         console.error(err);
         toast.error("Failed to fetch music data");
