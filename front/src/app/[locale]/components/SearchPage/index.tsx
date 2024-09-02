@@ -106,7 +106,7 @@ const SearchPage = () => {
         )}
       </div>
       <Player
-        id={selectedSongId}
+        _id={selectedSongId}
         isFull={false}
         setId={setSelectedSongId}
         setIsFull={() => {}}

@@ -116,6 +116,17 @@ const Sidebar = ({ setActivePage }: SidebarProps) => {
             />
           </ListItem>
         </Link>
+        <Link href="/profile/artist/createSong" passHref>
+          <ListItem>
+            <ListItemIcon>
+              <AddIcon sx={{ color: "#b3b3b3" }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Add Song"
+              primaryTypographyProps={{ color: "#b3b3b3" }}
+            />
+          </ListItem>
+        </Link>
         {/* )} */}
         {isAdmin && (
           <>

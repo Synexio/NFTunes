@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import Layout from "../../../components/Layout";
-import ArtistManagement from "@/app/[locale]/components/Admin/ArtistManagement";
+import AddSong from "../../../components/Artist/AddSong";
 
 const Home: React.FC = () => {
   return (
     <Layout>
-      <ArtistManagement />
+      <AddSong />
     </Layout>
   );
 };
