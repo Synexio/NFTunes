@@ -12,7 +12,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
-import AudiotrackIcon from "@mui/icons-material/Audiotrack";
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
+import { contractFactory as contract } from "../../context/contract";
+import { prepareContractCall, sendTransaction } from "thirdweb";
 
 const CreateAlbum: React.FC = () => {
   const [albumName, setAlbumName] = useState("");
@@ -20,6 +22,8 @@ const CreateAlbum: React.FC = () => {
   const [albumImgFile, setAlbumImgFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const api = process.env.NEXT_PUBLIC_API_URL;
+  const account = useActiveAccount();
+  const { mutate: sendTransaction } = useSendTransaction();
 
   const handleAlbumImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -30,42 +34,54 @@ const CreateAlbum: React.FC = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!albumName || !author || !albumImgFile) {
-      toast.error(
-        "Please fill out all fields and upload both audio and album cover files."
-      );
+      toast.error("Please fill out all fields and upload album cover.");
       return;
     }
 
     setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("name", albumName);
-      formData.append("author", author);
-      formData.append("img", albumImgFile);
+    // try {
+    const add = prepareContractCall({
+      contract,
+      method:
+        "function createAlbum(string memory name, string memory symbol, address admin,address staffContractAddress)",
+      params: [
+        "album",
+        "alm",
+        "0x6176d4666693933eF3a73ce38C28de54A611012D",
+        "0x4BF9FEbb3BF18Ff5cdce8E8271e0752b9e4D62f9",
+        // "https://ipfs.io/ipfs/QmZQv1",
+      ],
+    });
+    sendTransaction(add);
+    console.log("Prepared Contract Call:", add);
+    //   const formData = new FormData();
+    //   formData.append("name", albumName);
+    //   formData.append("author", author);
+    //   formData.append("img", albumImgFile);
 
-      const url = `${api}/album/create`;
-      const response = await axios.post(url, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    //   const url = `${api}/album/create`;
+    //   const response = await axios.post(url, formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   });
 
-      if (response.status === 200) {
-        toast.success("Album created successfully!");
-        console.log("Album ID:", response.data._id);
-        // Reset form fields
-        setAlbumName("");
-        setAuthor("");
-        setAlbumImgFile(null);
-      } else {
-        toast.error("An error occurred while creating the album.");
-      }
-    } catch (error) {
-      console.error("Error in handleSubmit:", error);
-      toast.error("An error occurred during the process.");
-    } finally {
-      setLoading(false);
-    }
+    //   if (response.status === 200) {
+
+    //     toast.success("Admin enregistré !");
+    //     toast.success("Album created successfully!");
+    //     setAlbumName("");
+    //     setAuthor("");
+    //     setAlbumImgFile(null);
+    //   } else {
+    //     toast.error("An error occurred while creating the album.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error in handleSubmit:", error);
+    //   toast.error("An error occurred during the process.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

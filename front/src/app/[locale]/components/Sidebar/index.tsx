@@ -22,6 +22,7 @@ interface SidebarProps {
 const Sidebar = ({ setActivePage }: SidebarProps) => {
   const account = useActiveAccount();
   const { isAdmin, isArtist, walletAddress } = useUserRole(account);
+  console.log(isAdmin);
   return (
     <Box
       sx={{

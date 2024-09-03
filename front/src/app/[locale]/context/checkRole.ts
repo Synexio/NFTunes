@@ -4,13 +4,12 @@ import { toast } from "react-toastify";
 import { getContract, readContract } from "thirdweb"; // Adjust imports to your project structure
 import { defineChain } from "thirdweb/chains";
 import { client } from "../client";
+import { contractStaff as contract } from "./contract";
 interface UserRole {
   isAdmin: boolean;
   isArtist: boolean;
   walletAddress: string | null;
 }
-
-const contractAddress = "0x9373392ce0d228840C7989A9be5D65F8964C2Fc6"; // Example contract address
 
 export const useUserRole = (account: any): UserRole => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -29,12 +28,6 @@ export const useUserRole = (account: any): UserRole => {
       setWalletAddress(account.address);
 
       try {
-        const contract = getContract({
-          client,
-          chain: defineChain(80002),
-          address: contractAddress,
-        });
-
         const role = await readContract({
           contract,
           method: "function isStaff(address account) view returns (string)",
