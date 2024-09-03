@@ -66,11 +66,17 @@ const CreateAlbum: React.FC = () => {
       });
 
       if (response.status === 200) {
-        toast.success("Admin enregistré !");
-        toast.success("Album created successfully!");
-        setAlbumName("");
-        setAuthor("");
-        setAlbumImgFile(null);
+        const url2 = `${api}/artist/address/${account?.address}`;
+        const updatePayload = {
+          albums: [response.data._id],
+        };
+        const response2 = await axios.put(url2, updatePayload);
+        if (response2.status === 200) {
+          toast.success("Album created successfully!");
+          setAlbumName("");
+          setAuthor("");
+          setAlbumImgFile(null);
+        }
       } else {
         toast.error("An error occurred while creating the album.");
       }

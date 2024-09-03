@@ -10,7 +10,6 @@ export const contractStaff = getContract({
 export const contractNFT = getContract({
   client,
   chain: defineChain(80002),
-  //PROXY
   address: "0x395192AE0cA207A492dc32Dd6271a168fcc58411",
 });
 
@@ -23,6 +22,5 @@ export const contractToken = getContract({
 export const contractFactory = getContract({
   client,
   chain: defineChain(80002),
-  //PROXY
   address: "0xD882e3726eF4E3c4FAE6D6126bdB59da4C9fe02c",
 });

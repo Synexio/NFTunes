@@ -14,6 +14,9 @@ import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import { useSearchParams } from "next/navigation"; // Import useSearchParams
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
+import { contractNFT as contract } from "../../context/contract";
+import { prepareContractCall, sendTransaction } from "thirdweb";
 
 const AddSong: React.FC = () => {
   const [songName, setSongName] = useState("");
@@ -23,6 +26,8 @@ const AddSong: React.FC = () => {
   const [albumImgFile, setAlbumImgFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const api = process.env.NEXT_PUBLIC_API_URL;
+  const account = useActiveAccount();
+  const { mutate: sendTransaction } = useSendTransaction();
 
   const searchParams = useSearchParams();
   const albumId = searchParams.get("albumId"); // Retrieve album ID from URL
@@ -50,6 +55,13 @@ const AddSong: React.FC = () => {
 
     setLoading(true);
     try {
+      const add = prepareContractCall({
+        contract,
+        method: "function safeMint(address to, string memory _uri)",
+        params: [account?.address as `0x${string}`, "https://ipfs.io/ipfs/Qm"],
+      });
+      sendTransaction(add);
+      console.log("Prepared Contract Call:", add);
       const formData = new FormData();
       formData.append("name", songName);
       formData.append("author", author);
