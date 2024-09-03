@@ -10,7 +10,7 @@ export const contractStaff = getContract({
 export const contractNFT = getContract({
   client,
   chain: defineChain(80002),
-  address: "0x395192AE0cA207A492dc32Dd6271a168fcc58411",
+  address: "0x4AC41f8E9FCf72795436d2296d51f57aEb9d135a",
 });
 
 export const contractToken = getContract({

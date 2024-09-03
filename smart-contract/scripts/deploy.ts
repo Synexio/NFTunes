@@ -3,17 +3,22 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  // const SoundNFT = await ethers.getContractFactory("SoundNFT");
-  // console.log("Deploying SoundNFT to", network.name);
-  // const soundNFT = await upgrades.deployProxy(
-  //   SoundNFT,
-  //   [process.env.ADMIN_ADDRESS, process.env.PROXY_STAFF_ADDRESS, "SoundNFT", "SNFT"],
-  //   {
-  //     initializer: "initialize",
-  //   }
-  // );
-  // await soundNFT.waitForDeployment();
-  // console.log("SoundNFT deployed to:", await soundNFT.getAddress());
+  const SoundNFT = await ethers.getContractFactory("SoundNFT");
+  console.log("Deploying SoundNFT to", network.name);
+  const soundNFT = await upgrades.deployProxy(
+    SoundNFT,
+    [
+      process.env.ADMIN_ADDRESS,
+      process.env.PROXY_STAFF_ADDRESS,
+      "SoundNFT",
+      "SNFT",
+    ],
+    {
+      initializer: "initialize",
+    }
+  );
+  await soundNFT.waitForDeployment();
+  console.log("SoundNFT deployed to:", await soundNFT.getAddress());
   //----------------------------------------------------------------
   // const AlbumFactory = await ethers.getContractFactory("AlbumFactory");
   // console.log("Deploying AlbumFactory to", network.name);
@@ -27,17 +32,17 @@ async function main() {
   // await albumFactory.waitForDeployment();
   // console.log("AlbumFactory deployed to:", await albumFactory.getAddress());
   //----------------------------------------------------------------
-  const SoundToken = await ethers.getContractFactory("SoundToken");
-  console.log("Deploying SoundToken to", network.name);
-  const soundToken = await upgrades.deployProxy(
-    SoundToken,
-    [process.env.ADMIN_ADDRESS, process.env.PROXY_STAFF_ADDRESS],
-    {
-      initializer: "initialize",
-    }
-  );
-  await soundToken.waitForDeployment();
-  console.log("SoundToken deployed to:", await soundToken.getAddress());
+  // const SoundToken = await ethers.getContractFactory("SoundToken");
+  // console.log("Deploying SoundToken to", network.name);
+  // const soundToken = await upgrades.deployProxy(
+  //   SoundToken,
+  //   [process.env.ADMIN_ADDRESS, process.env.PROXY_STAFF_ADDRESS],
+  //   {
+  //     initializer: "initialize",
+  //   }
+  // );
+  // await soundToken.waitForDeployment();
+  // console.log("SoundToken deployed to:", await soundToken.getAddress());
   //----------------------------------------------------------------
   // const Staff = await ethers.getContractFactory("Staff");
   // console.log("Deploying Staff to", network.name);
