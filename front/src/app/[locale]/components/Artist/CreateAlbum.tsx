@@ -39,49 +39,47 @@ const CreateAlbum: React.FC = () => {
     }
 
     setLoading(true);
-    // try {
-    const add = prepareContractCall({
-      contract,
-      method:
-        "function createAlbum(string memory name, string memory symbol, address admin,address staffContractAddress)",
-      params: [
-        "album",
-        "alm",
-        "0x6176d4666693933eF3a73ce38C28de54A611012D",
-        "0x4BF9FEbb3BF18Ff5cdce8E8271e0752b9e4D62f9",
-        // "https://ipfs.io/ipfs/QmZQv1",
-      ],
-    });
-    sendTransaction(add);
-    console.log("Prepared Contract Call:", add);
-    //   const formData = new FormData();
-    //   formData.append("name", albumName);
-    //   formData.append("author", author);
-    //   formData.append("img", albumImgFile);
+    try {
+      const formData = new FormData();
+      formData.append("name", albumName);
+      formData.append("author", author);
+      formData.append("img", albumImgFile);
 
-    //   const url = `${api}/album/create`;
-    //   const response = await axios.post(url, formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
+      const url = `${api}/album/create`;
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    //   if (response.status === 200) {
-
-    //     toast.success("Admin enregistré !");
-    //     toast.success("Album created successfully!");
-    //     setAlbumName("");
-    //     setAuthor("");
-    //     setAlbumImgFile(null);
-    //   } else {
-    //     toast.error("An error occurred while creating the album.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error in handleSubmit:", error);
-    //   toast.error("An error occurred during the process.");
-    // } finally {
-    //   setLoading(false);
-    // }
+      if (response.status === 200) {
+        const add = prepareContractCall({
+          contract,
+          method:
+            "function createAlbum(string memory name, string memory symbol, address admin,address staffContractAddress)",
+          params: [
+            "album",
+            "alm",
+            "0x6176d4666693933eF3a73ce38C28de54A611012D",
+            "0x4BF9FEbb3BF18Ff5cdce8E8271e0752b9e4D62f9",
+          ],
+        });
+        sendTransaction(add);
+        console.log("Prepared Contract Call:", add);
+        toast.success("Admin enregistré !");
+        toast.success("Album created successfully!");
+        setAlbumName("");
+        setAuthor("");
+        setAlbumImgFile(null);
+      } else {
+        toast.error("An error occurred while creating the album.");
+      }
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      toast.error("An error occurred during the process.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
