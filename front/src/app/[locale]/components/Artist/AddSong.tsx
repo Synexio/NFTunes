@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import ImageIcon from "@mui/icons-material/Image";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
+import { useSearchParams } from "next/navigation"; // Import useSearchParams
 
 const AddSong: React.FC = () => {
   const [songName, setSongName] = useState("");
@@ -22,6 +23,9 @@ const AddSong: React.FC = () => {
   const [albumImgFile, setAlbumImgFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const api = process.env.NEXT_PUBLIC_API_URL;
+
+  const searchParams = useSearchParams();
+  const albumId = searchParams.get("albumId"); // Retrieve album ID from URL
 
   const handleAudioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -53,6 +57,13 @@ const AddSong: React.FC = () => {
       formData.append("audio", audioFile);
       formData.append("album_img", albumImgFile);
 
+      if (albumId) {
+        formData.append("albumId", albumId);
+      } else {
+        toast.error("Album ID is missing.");
+        return;
+      }
+
       const url = `${api}/title/create`;
       const response = await axios.post(url, formData, {
         headers: {
@@ -61,14 +72,19 @@ const AddSong: React.FC = () => {
       });
 
       if (response.status === 200) {
-        toast.success("Song created successfully!");
-        console.log("Song ID:", response.data._id);
-        // Reset form fields
-        setSongName("");
-        setAuthor("");
-        setGenre("");
-        setAudioFile(null);
-        setAlbumImgFile(null);
+        const url2 = `${api}/album/update/${albumId}`;
+        const updatePayload = {
+          titles: [response.data._id],
+        };
+        const response2 = await axios.put(url2, updatePayload);
+        if (response2.status === 200) {
+          toast.success("Song created successfully!");
+          setSongName("");
+          setAuthor("");
+          setGenre("");
+          setAudioFile(null);
+          setAlbumImgFile(null);
+        }
       } else {
         toast.error("An error occurred while creating the song.");
       }

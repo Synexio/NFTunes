@@ -93,6 +93,23 @@ export class AlbumController {
     }
     res.status(204).end();
   }
+  async getAlbumByIdAndUpdate(req: express.Request, res: express.Response) {
+    const id = req.params.id;
+    const data = req.body;
+
+    const result = await AlbumService.getInstance().getAlbumByIdAndUpdate(
+      id,
+      data
+    );
+    if (result === ApiErrorCode.notFound) {
+      return res.status(404).json({ message: "Album not found" });
+    }
+    if (result === ApiErrorCode.failed) {
+      console.error("Failed to retrieve album:", id);
+      return res.status(500).json({ message: "Failed to retrieve album" });
+    }
+    return res.json(result);
+  }
 
   buildRouter(): express.Router {
     const router = express.Router(); //création d'un nouveau routeur
@@ -104,6 +121,7 @@ export class AlbumController {
       this.createAlbum.bind(this)
     );
     router.delete("/:id", this.deleteAlbum.bind(this));
+    router.put("/update/:id", this.getAlbumByIdAndUpdate.bind(this));
     return router;
   }
 }

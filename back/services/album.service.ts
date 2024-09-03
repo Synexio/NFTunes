@@ -53,6 +53,37 @@ export class AlbumService {
     const albums = await AlbumModel.find();
     return albums;
   }
+
+  async getAlbumByIdAndUpdate(
+    id: string,
+    update: AlbumUpdate
+  ): Promise<AlbumDocument | ApiErrorCode> {
+    try {
+      console.log(id);
+      const album = await AlbumModel.findByIdAndUpdate(
+        id,
+        {
+          $push: { titles: { $each: update.titles } },
+          $set: {
+            address: update.address,
+            name: update.name,
+            author: update.author,
+          },
+        },
+
+        {
+          returnDocument: "after",
+        }
+      );
+      if (album === null) {
+        return ApiErrorCode.notFound;
+      }
+      return album;
+    } catch (error) {
+      console.error("Error fetching album:", error); // Log the error
+      return ApiErrorCode.failed;
+    }
+  }
 }
 
 export interface AlbumCreate {
@@ -60,5 +91,12 @@ export interface AlbumCreate {
   readonly name: string;
   readonly author: string;
   readonly img: string;
+  readonly titles?: string[] | null;
+}
+
+export interface AlbumUpdate {
+  readonly address?: string | null;
+  readonly name?: string;
+  readonly author?: string;
   readonly titles?: string[] | null;
 }
