@@ -10,7 +10,9 @@ const SearchPage = () => {
   const [query, setQuery] = useState<string>("");
   const [_id, setId] = useState<string>("");
   const [isFull, setIsFull] = useState<boolean>(false);
-  const [filteredResults, setFilteredResults] = useState<Music[]>([]);
+  const [filteredResults, setFilteredResults] = useState<
+    Music[] | MusicAlbum[]
+  >([]);
   const router = useRouter();
   const api = process.env.NEXT_PUBLIC_API_URL;
 
@@ -56,6 +58,18 @@ const SearchPage = () => {
       music.name.toLowerCase().includes(query.toLowerCase()) ||
       music.author.toLowerCase().includes(query.toLowerCase())
   );
+
+  const handleAlbumClick = (album: MusicAlbum) => {
+    // Manually constructing the URL with query parameters
+    const query = new URLSearchParams({
+      name: album.name,
+      _id: album._id,
+      author: album.author,
+      img: album.img,
+    }).toString();
+
+    router.push(`/album/title/${album._id}?${query}`);
+  };
 
   return (
     <Box
@@ -118,17 +132,17 @@ const SearchPage = () => {
                       },
                       padding: 2,
                     }}
-                    onClick={() => setId(music._id)}
+                    onClick={() => handleAlbumClick(music as MusicAlbum)} // Cast to MusicAlbum
                   >
-                    <img
-                      src={music.album_img}
+                    {/* <img
+                      src={music.img}
                       alt={music.name}
                       style={{
                         width: "100%",
                         height: "auto",
                         borderRadius: "8px",
                       }}
-                    />
+                    /> */}
                     <Typography variant="subtitle1" sx={{ marginTop: 1 }}>
                       {music.name}
                     </Typography>
@@ -171,7 +185,7 @@ const SearchPage = () => {
                     }}
                     onClick={() => setId(music._id)}
                   >
-                    <img
+                    {/* <img
                       src={music.album_img}
                       alt={music.name}
                       style={{
@@ -179,7 +193,7 @@ const SearchPage = () => {
                         height: "auto",
                         borderRadius: "8px",
                       }}
-                    />
+                    /> */}
                     <Typography variant="subtitle1" sx={{ marginTop: 1 }}>
                       {music.name}
                     </Typography>
