@@ -34,8 +34,8 @@ contract Staff is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         _addStaff(account, role);
     }
 
-    function removeStaff(address account, string memory role) public onlyRole(ADMIN_ROLE) {
-        _removeStaff(account, role);
+    function removeStaff(address account) public onlyRole(ADMIN_ROLE) {
+        _removeStaff(account);
     }
 
     function isStaff(address account) public view returns (string memory) {
@@ -46,8 +46,8 @@ contract Staff is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
         _staff[account] = role;
     }
 
-    function _removeStaff(address account, string memory role) internal {
-        _staff[account] = role;
+    function _removeStaff(address account) internal {
+        _staff[account] = "null";
     }
     
 
