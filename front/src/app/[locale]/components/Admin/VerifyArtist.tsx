@@ -156,9 +156,11 @@ const VerifyArtist: React.FC<VerifyArtistProps> = ({ showConfirmed }) => {
           >
             <TableHead>
               <TableRow>
-                <TableCell sx={{ color: "white", width: "50px" }}>
-                  Select
-                </TableCell>
+                {showConfirmed ??
+                  <TableCell sx={{ color: "white", width: "50px" }}>
+                    Select
+                  </TableCell>
+                }
                 <TableCell sx={{ color: "white", width: "150px" }}>
                   Address
                 </TableCell>
@@ -178,13 +180,15 @@ const VerifyArtist: React.FC<VerifyArtistProps> = ({ showConfirmed }) => {
                 const userInfo = userDetails[artist.address] || {};
                 return (
                   <TableRow key={artist._id}>
-                    <TableCell>
-                      <Checkbox
-                        checked={selectedArtists.includes(artist._id)}
-                        onChange={() => handleSelectArtist(artist._id)}
-                        sx={{ color: "white" }}
-                      />
-                    </TableCell>
+                    {showConfirmed ??
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedArtists.includes(artist._id)}
+                          onChange={() => handleSelectArtist(artist._id)}
+                          sx={{ color: "white" }}
+                        />
+                      </TableCell>
+                    }
                     <TableCell
                       sx={{
                         color: "white",
