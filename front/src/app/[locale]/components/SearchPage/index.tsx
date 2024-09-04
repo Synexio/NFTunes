@@ -1,39 +1,61 @@
-// components/AlbumCard/SearchPage.tsx
 "use client";
 import { Box, Typography, TextField, Grid } from "@mui/material";
-import React, { useState, ChangeEvent } from "react";
-import { musics } from "../../data/data";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { Player } from "../Player";
-import {MusicAlbum, Music} from "@/interfaces"; // Ensure this is the correct path
+import { MusicAlbum, Music } from "@/interfaces";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const SearchPage = () => {
   const [query, setQuery] = useState<string>("");
   const [_id, setId] = useState<string>("");
   const [isFull, setIsFull] = useState<boolean>(false);
+  const [filteredResults, setFilteredResults] = useState<Music[]>([]);
   const router = useRouter();
+  const api = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
-  const filteredResults = musics.filter(
+  useEffect(() => {
+    const fetchMusics = async () => {
+      try {
+        const titlesResponse = await axios.get(`${api}/title`);
+        const albumsResponse = await axios.get(`${api}/album`);
+
+        // Combine titles and albums into one array
+        const combinedResults = [
+          ...titlesResponse.data.map((item: any) => ({
+            _id: item._id,
+            name: item.name,
+            author: item.author,
+            album_img: item.album_img,
+            type: "title", // you can add a type to distinguish between title and album
+          })),
+          // ...albumsResponse.data.map((item: any) => ({
+          //   _id: item._id,
+          //   name: item.name,
+          //   author: item.author,
+          //   img: item.img,
+          //   type: "album", // you can add a type to distinguish between title and album
+          // })),
+        ];
+
+        setFilteredResults(combinedResults);
+      } catch (error) {
+        console.error("Error fetching musics:", error);
+      }
+    };
+
+    fetchMusics();
+  }, [api]);
+
+  const filteredData = filteredResults.filter(
     (music) =>
       music.name.toLowerCase().includes(query.toLowerCase()) ||
       music.author.toLowerCase().includes(query.toLowerCase())
   );
-
-    const handleAlbumClick = (album: MusicAlbum) => {
-        // Manually constructing the URL with query parameters
-        const query = new URLSearchParams({
-            name: album.name,
-            _id: album._id,
-            author: album.author,
-            img: album.img,
-        }).toString();
-
-        router.push(`/album/title/${album._id}?${query}`);
-    };
 
   return (
     <Box
@@ -74,10 +96,10 @@ const SearchPage = () => {
         </Typography>
       </Box>
       <div style={{ flexGrow: 1 }}>
-        {filteredResults.length > 0 ? (
+        {filteredData.length > 0 ? (
           <Grid container spacing={2}>
-            {filteredResults.map((music) => (
-              <Grid item xs={12} sm={6} md={4} key={music.id}>
+            {filteredData.map((music) => (
+              <Grid item xs={12} sm={6} md={4} key={music._id}>
                 <Box
                   sx={{
                     display: "flex",
@@ -94,11 +116,10 @@ const SearchPage = () => {
                     },
                     padding: 2,
                   }}
-                  onClick={() => setId(music.id)}
+                  onClick={() => setId(music._id)}
                 >
                   <img
                     src={music.album_img}
-                    alt={music.name}
                     style={{
                       width: "100%",
                       height: "auto",
@@ -121,15 +142,15 @@ const SearchPage = () => {
           </Typography>
         )}
       </div>
-        {_id &&
-          <Player
-            _id={_id}
-            setId={setId}
-            setIsFull={setIsFull}
-            isFull={isFull}
-            windowWidth={window.innerWidth}
-          />
-        }
+      {_id && (
+        <Player
+          _id={_id}
+          setId={setId}
+          setIsFull={setIsFull}
+          isFull={isFull}
+          windowWidth={window.innerWidth}
+        />
+      )}
     </Box>
   );
 };
