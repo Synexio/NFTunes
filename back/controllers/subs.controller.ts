@@ -71,11 +71,21 @@ export class SubsController {
         res.status(204).end();
     }
 
+    async isSubscribed(req: express.Request, res: express.Response) {
+        const userId = req.params.userId;
+        const result = await SubsService.getInstance().isSubscribed(userId);
+        if (result === null) {
+            return res.status(404).end();
+        }
+        res.json(result);
+    }
+
     buildRouter(): express.Router {
         const router = express.Router(); //création d'un nouveau routeur
         router.get("/", this.getAllSubs.bind(this));
         router.get("/:userId", this.getSubsByUserId.bind(this));
         router.get("/:id", this.getSubsById.bind(this));
+        router.get("/isSubscribed/:userId", this.isSubscribed.bind(this));
         router.post("/create", this.createSubs.bind(this));
         router.delete("/:id", this.deleteSubs.bind(this)
         );

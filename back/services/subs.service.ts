@@ -63,6 +63,18 @@ export class SubsService {
         const subs = await SubsModel.find();
         return subs;
     }
+
+    async isSubscribed(userId: string): Promise<boolean> {
+        if (!Types.ObjectId.isValid(userId)) {
+            return false;
+        }
+        const subs = await SubsModel.findOne({ userId });
+        if (subs === null) {
+            return false;
+        }
+        return subs.status === "abonnement en cours";
+    }
+
 }
 
 export interface SubsCreate {

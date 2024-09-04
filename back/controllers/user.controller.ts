@@ -140,6 +140,7 @@ export class UserController {
     res.json(result);
   }
 
+
   buildRouter(): Router {
     const router = Router();
     router.get("/", this.getAllUsers.bind(this));
