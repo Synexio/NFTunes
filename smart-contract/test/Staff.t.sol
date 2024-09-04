@@ -35,8 +35,8 @@ contract SoundNFTTest is Test {
     function testRemoveStaff() public {
         instance.initialize(admin);
         vm.startPrank(admin);
-        instance.removeStaff(artist, "");
-        assertEq(instance.isStaff(artist), "");
+        instance.removeStaff(artist);
+        assertEq(instance.isStaff(artist), "null");
         vm.stopPrank();
     }
 }

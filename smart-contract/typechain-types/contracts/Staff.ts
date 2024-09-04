@@ -94,7 +94,7 @@ export interface StaffInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "removeStaff",
-    values: [AddressLike, string]
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -312,7 +312,7 @@ export interface Staff extends BaseContract {
   proxiableUUID: TypedContractMethod<[], [string], "view">;
 
   removeStaff: TypedContractMethod<
-    [account: AddressLike, role: string],
+    [account: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -389,11 +389,7 @@ export interface Staff extends BaseContract {
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "removeStaff"
-  ): TypedContractMethod<
-    [account: AddressLike, role: string],
-    [void],
-    "nonpayable"
-  >;
+  ): TypedContractMethod<[account: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "renounceRole"
   ): TypedContractMethod<

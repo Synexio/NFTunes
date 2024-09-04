@@ -90,8 +90,8 @@
       ]
     },
     "/Users/zhang/Documents/NFTunes/smart-contract/contracts/Staff.sol": {
-      "lastModificationDate": 1725352385096,
-      "contentHash": "2ced4c93e687b82342892de68f6f87bf",
+      "lastModificationDate": 1725484142562,
+      "contentHash": "38aac274e07094dac67e40bfa2bfbe04",
       "sourceName": "contracts/Staff.sol",
       "solcConfig": {
         "version": "0.8.20",
