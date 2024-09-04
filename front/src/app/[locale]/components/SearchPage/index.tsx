@@ -3,11 +3,15 @@
 import { Box, Typography, TextField, Grid } from "@mui/material";
 import React, { useState, ChangeEvent } from "react";
 import { musics } from "../../data/data";
-import { Player } from "../Player"; // Ensure this is the correct path
+import { Player } from "../Player";
+import {MusicAlbum, Music} from "@/interfaces"; // Ensure this is the correct path
+import { useRouter } from "next/navigation";
 
 const SearchPage = () => {
   const [query, setQuery] = useState<string>("");
-  const [selectedSongId, setSelectedSongId] = useState<string>("");
+  const [_id, setId] = useState<string>("");
+  const [isFull, setIsFull] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -18,6 +22,18 @@ const SearchPage = () => {
       music.name.toLowerCase().includes(query.toLowerCase()) ||
       music.author.toLowerCase().includes(query.toLowerCase())
   );
+
+    const handleAlbumClick = (album: MusicAlbum) => {
+        // Manually constructing the URL with query parameters
+        const query = new URLSearchParams({
+            name: album.name,
+            _id: album._id,
+            author: album.author,
+            img: album.img,
+        }).toString();
+
+        router.push(`/album/title/${album._id}?${query}`);
+    };
 
   return (
     <Box
@@ -78,7 +94,7 @@ const SearchPage = () => {
                     },
                     padding: 2,
                   }}
-                  onClick={() => setSelectedSongId(music.id)}
+                  onClick={() => setId(music.id)}
                 >
                   <img
                     src={music.album_img}
@@ -105,13 +121,15 @@ const SearchPage = () => {
           </Typography>
         )}
       </div>
-      <Player
-        _id={selectedSongId}
-        isFull={false}
-        setId={setSelectedSongId}
-        setIsFull={() => {}}
-        windowWidth={window.innerWidth}
-      />
+        {_id &&
+          <Player
+            _id={_id}
+            setId={setId}
+            setIsFull={setIsFull}
+            isFull={isFull}
+            windowWidth={window.innerWidth}
+          />
+        }
     </Box>
   );
 };

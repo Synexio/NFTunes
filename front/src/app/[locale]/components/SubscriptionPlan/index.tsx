@@ -2,7 +2,11 @@ import { Box, Typography, Button } from "@mui/material";
 import { Subs } from "subs-widget";
 
 const Subscription = () => {
+
   const handleResponse = (response: { success: boolean; message: string }) => {
+    console.log("This is what happened", response);
+  };
+
     return (
       <Box
       sx={{
@@ -66,7 +70,6 @@ Subscribe Now
       </Box>
       </Box>
     );
-  };
 }
 
 export default Subscription;
