@@ -1,6 +1,7 @@
-import { UserDocument, UserModel, UserProps } from "../models";
+import {SubsModel, UserDocument, UserModel, UserProps} from "../models";
 import { ApiErrorCode } from "../api-error-code.enum";
 import { Types, FilterQuery } from "mongoose";
+import {SubsService} from "./subs.service";
 
 export class UserService {
   private static instance: UserService;
@@ -133,6 +134,24 @@ export class UserService {
       return null;
     }
     return user;
+  }
+
+  async isAddressSubscribed(address: string): Promise<boolean> {
+    if (typeof (address) !== "string") {
+      return null;
+    }
+    const user = await UserModel.findOne({ address });
+
+    if (user === null) {
+      return false;
+    }
+
+    const res = await SubsService.getInstance().isSubscribed(user._id);
+
+    if (res === null) {
+      return null;
+    }
+    return res;
   }
 }
 

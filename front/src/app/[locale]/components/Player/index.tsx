@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import * as C from "./styles";
-import { Play, Pause, VolumeOff, VolumeOn } from "../../svgs";
+import {Pause, Play, VolumeOff, VolumeOn} from "../../svgs";
+import {useActiveAccount} from "thirdweb/react";
+
 
 type Props = {
   _id: string;
@@ -42,6 +44,48 @@ export const Player = ({
   const progressBar = useRef<HTMLInputElement | null>(null);
   const pointIntervalRef = useRef<NodeJS.Timeout | null>(null); // Ref to store interval ID
 
+  // Début logique isSubscribed
+  const [nerfed, setNerfed] = useState<boolean>(false); //
+
+  const account = useActiveAccount();
+
+  async function isSubscribed(address: string) {
+    const res = await fetch(`${api}/user/isSubscribed/${address}`, {
+      method: 'GET',
+    });
+
+    console.log("res: ", res);
+    return res;
+  }
+
+  console.log(audioTag.current?.currentTime, nerfed);
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (account) {
+        try {
+          const response = await isSubscribed(account.address);
+          const isSubscribedStatus = await response.json(); // Assuming API returns a boolean in the response body
+          setNerfed(!isSubscribedStatus); // Inverse: if subscribed, nerfed is false; otherwise true
+        } catch (error) {
+          console.error("Failed to check subscription:", error);
+          setNerfed(true); // Set nerfed to true in case of error
+        }
+      } else {
+        setNerfed(true); // Set nerfed to true if no account is found
+      }
+    };
+
+    checkSubscription();
+  }, [account]);
+// Fin logique isSubscribed
+
+  let stop = false;
+  // Stop playing after 20 seconds if nerfed
+  if (nerfed && audioTag.current?.currentTime! >= 20) {
+    stop = true;
+  }
+
   // Fetch music data
   useEffect(() => {
     const fetchMusics = async () => {
@@ -67,16 +111,22 @@ export const Player = ({
         audioTag.current.muted = isMuted;
         audioTag.current.play();
 
-        // Start awarding points every 10 seconds
         if (!pointIntervalRef.current) {
           pointIntervalRef.current = setInterval(() => {
             setPoints((prevPoints) => prevPoints + 1);
           }, 10000);
         }
+
+        // Stop playing after 20 seconds if nerfed
+        if (stop) {
+          console.log("STOP");
+          audioTag.current.pause();
+          setIsPlaying(false);
+          toast.info("You need to subscribe to continue.");
+        }
       } else {
         audioTag.current.pause();
 
-        // Stop awarding points when paused
         if (pointIntervalRef.current) {
           clearInterval(pointIntervalRef.current);
           pointIntervalRef.current = null;
@@ -84,7 +134,6 @@ export const Player = ({
       }
     }
 
-    // Cleanup the interval when component unmounts or when _id changes
     return () => {
       if (pointIntervalRef.current) {
         clearInterval(pointIntervalRef.current);
@@ -110,6 +159,13 @@ export const Player = ({
       setCurrentTime(audioTag.current.currentTime);
       if (progressBar.current) {
         progressBar.current.value = audioTag.current.currentTime.toString(); // Sync progress bar with current time
+      }
+
+      if (stop) {
+        console.log("STOP");
+        audioTag.current.pause();
+        setIsPlaying(false);
+        toast.info("You need to subscribe to continue.");
       }
     }
   };

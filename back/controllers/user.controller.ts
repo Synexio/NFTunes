@@ -140,6 +140,16 @@ export class UserController {
     res.json(result);
   }
 
+  async isAddressSubscribed(req: express.Request, res: express.Response) {
+    const address = req.params.address;
+    const result = await UserService.getInstance().isAddressSubscribed(address);
+    if (result === null) {
+      res.status(404).end();
+      return;
+    }
+    res.json(result);
+  }
+
 
   buildRouter(): Router {
     const router = Router();
@@ -150,6 +160,7 @@ export class UserController {
     router.patch("/update/:id", this.updateUser.bind(this));
     router.delete("/:id", this.deleteUser.bind(this));
     router.get("/:address", this.getUserByAddress.bind(this));
+    router.get("/isSubscribed/:address", this.isAddressSubscribed.bind(this));
     router.get("/:id", this.getUserById.bind(this));
 
     return router;
