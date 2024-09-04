@@ -48,6 +48,17 @@ export class SubsService {
         return subs;
     }
 
+    async getSubsByUserId(userId: string): Promise<SubsDocument | null> {
+        if (!Types.ObjectId.isValid(userId)) {
+            return null;
+        }
+        const subs = await SubsModel.findOne({ userId });
+        if (subs === null) {
+            return null;
+        }
+        return subs;
+    }
+
     async getAllSubs(): Promise<SubsDocument[] | null> {
         const subs = await SubsModel.find();
         return subs;
@@ -58,4 +69,5 @@ export interface SubsCreate {
     readonly startDate: Date;
     readonly lastPayment: Date;
     readonly status: string;
+    readonly userId: string;
 }

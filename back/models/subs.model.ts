@@ -6,6 +6,7 @@ export interface SubsProps {
     startDate: Date;
     lastPayment: Date;
     status: string;
+    userId: string;
 }
 
 export type SubsDocument = SubsProps & Document;
@@ -24,6 +25,11 @@ const subsSchema = new Schema(
             type: Schema.Types.String,
             required: true,
         },
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        }
     },
     {
         timestamps: true,

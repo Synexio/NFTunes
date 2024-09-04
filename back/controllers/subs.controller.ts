@@ -30,6 +30,15 @@ export class SubsController {
         res.json(result);
     }
 
+    async getSubsByUserId(req: express.Request, res: express.Response) {
+        const userId = req.params.userId;
+        const result = await SubsService.getInstance().getSubsByUserId(userId);
+        if (result === null) {
+            return res.status(404).end();
+        }
+        res.json(result);
+    }
+
     async getAllSubs(req: express.Request, res: express.Response) {
         const result = await SubsService.getInstance().getAllSubs();
         if (result === null) {
@@ -65,6 +74,7 @@ export class SubsController {
     buildRouter(): express.Router {
         const router = express.Router(); //création d'un nouveau routeur
         router.get("/", this.getAllSubs.bind(this));
+        router.get("/:userId", this.getSubsByUserId.bind(this));
         router.get("/:id", this.getSubsById.bind(this));
         router.post("/create", this.createSubs.bind(this));
         router.delete("/:id", this.deleteSubs.bind(this)

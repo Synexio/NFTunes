@@ -1,10 +1,53 @@
+import { useRouter } from "@/navigation";
 import { Box, Typography, Button } from "@mui/material";
 import { Subs } from "subs-widget";
+import {useActiveAccount} from "thirdweb/react";
 
 const Subscription = () => {
 
+  const router = useRouter();
+  const account = useActiveAccount();
+  const api = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!account) {
+    router.push("/home");
+    return null;
+  }
+
+  const address = account.address;
+  const fetchUser = async (address: string): Promise<any> => {
+      const response = await fetch(`${api}/user/${address}`);
+      return await response.json(); // Parse the response as JSON
+  };
+
+  async function createSubscription(address: string) {
+    console.log(address);
+
+    const user = await fetchUser(address);
+
+    const response = await fetch(`${api}/sub/create`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        startDate: Date.now(),
+        lastPayment: Date.now(),
+        status: "Abonnement en cours",
+        userId: user._id
+
+      })
+    });
+    console.log("reponse post :", response);
+  }
+
   const handleResponse = (response: { success: boolean; message: string }) => {
     console.log("This is what happened", response);
+
+    if (response.success) {
+      createSubscription(address);
+    }
+
   };
 
     return (

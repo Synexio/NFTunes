@@ -27,7 +27,7 @@ const Sidebar = () => {
     async function addUser(address: string){
         console.log(address);
 
-        const response = await fetch("http://localhost:3001/user/create", {
+        const response = await fetch(`${api}/user/create`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -37,20 +37,6 @@ const Sidebar = () => {
             })
         });
         console.log("reponse post :", response);
-    }
-
-    async function handleAuth(address: string) {
-        if (!address) {
-            toast.error("Address is required.");
-            return;
-        }
-
-        const response = await axios.get(`${api}/user/${address}`);
-        console.log("reponse get :", response);
-
-        if (!response.data) {
-            await addUser(address);
-        }
     }
 
     return (
@@ -115,7 +101,7 @@ const Sidebar = () => {
                         />
                     </ListItem>
                 </Link>
-                {!isAdmin && (
+                {(!isAdmin && account) && (
                     <>
                         <Link href="/subscription" passHref>
                             <ListItem>
