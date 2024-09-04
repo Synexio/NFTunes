@@ -114,7 +114,7 @@ function MainContent() {
               >
                 <img
                   src={music.album_img}
-                  alt={music.name}
+                  alt="Image not found :("
                   style={{ width: "100%", height: "auto", borderRadius: "8px" }}
                 />
                 <Typography
@@ -167,7 +167,7 @@ function MainContent() {
               >
                 <img
                   src={album.img}
-                  alt={album.name}
+                  alt="Image not found :("
                   style={{
                     width: "100%",
                     height: "auto",

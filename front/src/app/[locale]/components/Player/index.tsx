@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import * as C from "./styles"; // Ensure you import your styles
-import { Play, Pause, VolumeOff, VolumeOn } from "../../svgs"; // Import your SVG components
+import * as C from "./styles";
+import { Play, Pause, VolumeOff, VolumeOn } from "../../svgs";
 
 type Props = {
   _id: string;
@@ -23,12 +23,12 @@ interface Music {
 }
 
 export const Player = ({
-  _id,
-  setId,
-  setIsFull,
-  isFull,
-  windowWidth,
-}: Props) => {
+                         _id,
+                         setId,
+                         setIsFull,
+                         isFull,
+                         windowWidth,
+                       }: Props) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(1);
   const [duration, setDuration] = useState<number>(0);
@@ -40,7 +40,6 @@ export const Player = ({
 
   const audioTag = useRef<HTMLAudioElement | null>(null);
   const progressBar = useRef<HTMLInputElement | null>(null);
-  const animationRef = useRef<number>(0);
   const pointIntervalRef = useRef<NodeJS.Timeout | null>(null); // Ref to store interval ID
 
   // Fetch music data
@@ -115,19 +114,34 @@ export const Player = ({
     }
   };
 
+  // Handle song end
+  const handleEnded = () => {
+    setIsPlaying(false); // Stop playing when the song ends
+    setCurrentTime(0); // Reset the current time
+    if (progressBar.current) {
+      progressBar.current.value = "0"; // Reset progress bar
+    }
+  };
+
+  // Handle range change
   const changeRange = () => {
     if (audioTag.current) {
       audioTag.current.currentTime = Number(progressBar.current?.value);
     }
   };
 
+  // Handle music click
   const handleMusicClick = (music: Music) => {
+    if (audioTag.current) {
+      audioTag.current.pause(); // Pause the current playing song
+      audioTag.current.currentTime = 0; // Reset the current time
+    }
+    setIsPlaying(false); // Set playing state to false before starting a new song
     setId(music._id); // Set the current music ID
     setIsPlaying(true); // Set playing state to true
-    audioTag.current?.play(); // Play the music
-    setCurrentTime(0); // Reset current time when a new track is clicked
   };
 
+  // Calculate duration
   const calculateDuration = (sec: number) => {
     const minutes = Math.floor(sec / 60);
     const newMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
@@ -138,86 +152,87 @@ export const Player = ({
   };
 
   return (
-    <C.Container isFull={isFull}>
-      <div className="musicDiv">
-        {Array.isArray(musics) && musics.length > 0 ? (
-          musics.map((music) => (
-            <div
-              onClick={() => handleMusicClick(music)} // Play music on click
-              className="music"
-              key={music._id}
-            >
-              <img src={music.album_img} alt={`${music.name} album`} />
-              <div className="musicDetails">
-                <h1>{music.name}</h1>
-                <h3>{music.author}</h3>
-              </div>
-              <audio
-                src={music.audio}
-                ref={audioTag}
-                onLoadedMetadata={handleLoadedMetadata}
-                onTimeUpdate={handleTimeUpdate}
-              />
+      <C.Container isFull={isFull}>
+        <div className="musicDiv">
+          {Array.isArray(musics) && musics.length > 0 ? (
+              musics.map((music) => (
+                  <div
+                      onClick={() => handleMusicClick(music)} // Play music on click
+                      className="music"
+                      key={music._id}
+                  >
+                    <img src={music.album_img} alt={`${music.name} album`} />
+                    <div className="musicDetails">
+                      <h1>{music.name}</h1>
+                      <h3>{music.author}</h3>
+                    </div>
+                    <audio
+                        src={music.audio}
+                        ref={audioTag}
+                        onLoadedMetadata={handleLoadedMetadata}
+                        onTimeUpdate={handleTimeUpdate}
+                        onEnded={handleEnded} // Handle when the song ends
+                    />
+                  </div>
+              ))
+          ) : (
+              <p>No music available</p>
+          )}
+        </div>
+        <div className="player">
+          <div className="progressContainer">
+            {windowWidth >= 830 || isFull ? (
+                <div className="progressBar">
+                  <p className="PcurrentTime">{calculateDuration(currentTime)}</p>
+                  <input
+                      type="range"
+                      className="currentProgress"
+                      defaultValue="0"
+                      ref={progressBar}
+                      onChange={changeRange}
+                  />
+                  <p className="Pduration">
+                    {duration ? calculateDuration(duration) : "00:00"}
+                  </p>
+                </div>
+            ) : null}
+            <div className="buttons">
+              <button
+                  className="playPause"
+                  onClick={() => setIsPlaying(!isPlaying)}
+              >
+                {isPlaying ? <Pause /> : <Play />}
+              </button>
             </div>
-          ))
-        ) : (
-          <p>No music available</p>
-        )}
-      </div>
-      <div className="player">
-        <div className="progressContainer">
-          {windowWidth >= 830 || isFull ? (
-            <div className="progressBar">
-              <p className="PcurrentTime">{calculateDuration(currentTime)}</p>
-              <input
-                type="range"
-                className="currentProgress"
-                defaultValue="0"
-                ref={progressBar}
-                onChange={changeRange}
-              />
-              <p className="Pduration">
-                {duration ? calculateDuration(duration) : "00:00"}
-              </p>
-            </div>
-          ) : null}
-          <div className="buttons">
-            <button
-              className="playPause"
-              onClick={() => setIsPlaying(!isPlaying)}
-            >
-              {isPlaying ? <Pause /> : <Play />}
-            </button>
           </div>
         </div>
-      </div>
-      <div className="volumeControls">
-        {windowWidth > 825 && (
-          <>
-            <button
-              className="volumeButton"
-              onClick={() => setIsMuted(!isMuted)}
-            >
-              {isMuted ? <VolumeOff /> : <VolumeOn />}
-            </button>
-            <input
-              type="range"
-              step="0.01"
-              onChange={(e) => {
-                setVolume(parseFloat(e.target.value));
-                if (audioTag.current) {
-                  audioTag.current.volume = parseFloat(e.target.value);
-                }
-              }}
-              value={volume}
-              max="1"
-              min="0"
-            />
-          </>
-        )}
-      </div>
-      <div className="pointsDisplay">Points: {points}</div>{" "}
-      {/* Display points */}
-    </C.Container>
+        <div className="volumeControls">
+          {windowWidth > 825 && (
+              <>
+                <button
+                    className="volumeButton"
+                    onClick={() => setIsMuted(!isMuted)}
+                >
+                  {isMuted ? <VolumeOff /> : <VolumeOn />}
+                </button>
+                <input
+                    type="range"
+                    step="0.01"
+                    onChange={(e) => {
+                      setVolume(parseFloat(e.target.value));
+                      if (audioTag.current) {
+                        audioTag.current.volume = parseFloat(e.target.value);
+                      }
+                    }}
+                    value={volume}
+                    max="1"
+                    min="0"
+                />
+              </>
+          )}
+        </div>
+        <div className="pointsDisplay mr-6">Points: {points}</div>{" "}
+        {/* Display points */}
+      </C.Container>
   );
 };

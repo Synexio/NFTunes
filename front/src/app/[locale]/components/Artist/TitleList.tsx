@@ -11,7 +11,9 @@ import {
 } from "@mui/material";
 import { useSearchParams, useRouter } from "next/navigation"; // Import useRouter
 import axios from "axios";
-import { Player } from "../Player"; // Adjust the import according to your project structure
+import { Player } from "../Player";
+import {useActiveAccount} from "thirdweb/react";
+import {useUserRole} from "@/app/[locale]/context/checkRole"; // Adjust the import according to your project structure
 
 interface Title {
   _id: string;
@@ -33,6 +35,9 @@ const TitleList: React.FC<TitleListProps> = ({ _id }) => {
   const searchParams = useSearchParams();
   const router = useRouter(); // Use the router for navigation
   const api = process.env.NEXT_PUBLIC_API_URL; // Ensure this is set in your .env
+
+  const account = useActiveAccount();
+  const {isAdmin, isArtist, walletAddress} = useUserRole(account);
 
   // Extract query parameters
   const name = searchParams.get("name") || "Album";
@@ -132,6 +137,7 @@ const TitleList: React.FC<TitleListProps> = ({ _id }) => {
           </Box>
         </Box>
         {/* Add Song Button */}
+          {(isArtist || isAdmin) &&
         <Button
           variant="contained"
           color="primary"
@@ -144,6 +150,7 @@ const TitleList: React.FC<TitleListProps> = ({ _id }) => {
         >
           + Add Song
         </Button>
+          }
       </Box>
 
       <Typography variant="h5" gutterBottom>
