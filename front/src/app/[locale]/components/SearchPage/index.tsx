@@ -1,39 +1,61 @@
-// components/AlbumCard/SearchPage.tsx
 "use client";
 import { Box, Typography, TextField, Grid } from "@mui/material";
-import React, { useState, ChangeEvent } from "react";
-import { musics } from "../../data/data";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { Player } from "../Player";
-import {MusicAlbum, Music} from "@/interfaces"; // Ensure this is the correct path
+import { MusicAlbum, Music } from "@/interfaces";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const SearchPage = () => {
   const [query, setQuery] = useState<string>("");
   const [_id, setId] = useState<string>("");
   const [isFull, setIsFull] = useState<boolean>(false);
+  const [filteredResults, setFilteredResults] = useState<Music[]>([]);
   const router = useRouter();
+  const api = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
-  const filteredResults = musics.filter(
+  useEffect(() => {
+    const fetchMusics = async () => {
+      try {
+        const titlesResponse = await axios.get(`${api}/title`);
+        const albumsResponse = await axios.get(`${api}/album`);
+
+        // Combine titles and albums into one array
+        const combinedResults = [
+          ...titlesResponse.data.map((item: any) => ({
+            _id: item._id,
+            name: item.name,
+            author: item.author,
+            album_img: item.album_img,
+            type: "title", // Label as "title"
+          })),
+          ...albumsResponse.data.map((item: any) => ({
+            _id: item._id,
+            name: item.name,
+            author: item.author,
+            album_img: item.img,
+            type: "album", // Label as "album"
+          })),
+        ];
+
+        setFilteredResults(combinedResults);
+      } catch (error) {
+        console.error("Error fetching musics:", error);
+      }
+    };
+
+    fetchMusics();
+  }, [api]);
+
+  const filteredData = filteredResults.filter(
     (music) =>
       music.name.toLowerCase().includes(query.toLowerCase()) ||
       music.author.toLowerCase().includes(query.toLowerCase())
   );
-
-    const handleAlbumClick = (album: MusicAlbum) => {
-        // Manually constructing the URL with query parameters
-        const query = new URLSearchParams({
-            name: album.name,
-            _id: album._id,
-            author: album.author,
-            img: album.img,
-        }).toString();
-
-        router.push(`/album/title/${album._id}?${query}`);
-    };
 
   return (
     <Box
@@ -68,68 +90,118 @@ const SearchPage = () => {
           },
         }}
       />
-      <Box>
-        <Typography variant="h5" gutterBottom sx={{ marginTop: 5 }}>
-          Results
-        </Typography>
-      </Box>
-      <div style={{ flexGrow: 1 }}>
-        {filteredResults.length > 0 ? (
-          <Grid container spacing={2}>
-            {filteredResults.map((music) => (
-              <Grid item xs={12} sm={6} md={4} key={music.id}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                    backgroundColor: "#1e1e1e",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    cursor: "pointer",
-                    "&:hover": {
-                      boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)",
-                    },
-                    padding: 2,
-                  }}
-                  onClick={() => setId(music.id)}
-                >
-                  <img
-                    src={music.album_img}
-                    alt={music.name}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Typography variant="subtitle1" sx={{ marginTop: 1 }}>
-                    {music.name}
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ color: "#b3b3b3" }}>
-                    {music.author}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Typography variant="body1" sx={{ marginTop: 2 }}>
-            No results found.
+
+      {/* Albums Section */}
+      {filteredData.filter((music) => music.type === "album").length > 0 && (
+        <Box sx={{ marginTop: 5 }}>
+          <Typography variant="h5" gutterBottom>
+            Albums
           </Typography>
-        )}
-      </div>
-        {_id &&
-          <Player
-            _id={_id}
-            setId={setId}
-            setIsFull={setIsFull}
-            isFull={isFull}
-            windowWidth={window.innerWidth}
-          />
-        }
+          <Grid container spacing={2}>
+            {filteredData
+              .filter((music) => music.type === "album")
+              .map((music) => (
+                <Grid item xs={12} sm={6} md={4} key={music._id}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      backgroundColor: "#1e1e1e",
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                      cursor: "pointer",
+                      "&:hover": {
+                        boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)",
+                      },
+                      padding: 2,
+                    }}
+                    onClick={() => setId(music._id)}
+                  >
+                    <img
+                      src={music.album_img}
+                      alt={music.name}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "8px",
+                      }}
+                    />
+                    <Typography variant="subtitle1" sx={{ marginTop: 1 }}>
+                      {music.name}
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ color: "#b3b3b3" }}>
+                      {music.author}
+                    </Typography>
+                  </Box>
+                </Grid>
+              ))}
+          </Grid>
+        </Box>
+      )}
+
+      {/* Titles Section */}
+      {filteredData.filter((music) => music.type === "title").length > 0 && (
+        <Box sx={{ marginTop: 5 }}>
+          <Typography variant="h5" gutterBottom>
+            Titles
+          </Typography>
+          <Grid container spacing={2}>
+            {filteredData
+              .filter((music) => music.type === "title")
+              .map((music) => (
+                <Grid item xs={12} sm={6} md={4} key={music._id}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      backgroundColor: "#1e1e1e",
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                      cursor: "pointer",
+                      "&:hover": {
+                        boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)",
+                      },
+                      padding: 2,
+                    }}
+                    onClick={() => setId(music._id)}
+                  >
+                    <img
+                      src={music.album_img}
+                      alt={music.name}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "8px",
+                      }}
+                    />
+                    <Typography variant="subtitle1" sx={{ marginTop: 1 }}>
+                      {music.name}
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ color: "#b3b3b3" }}>
+                      {music.author}
+                    </Typography>
+                  </Box>
+                </Grid>
+              ))}
+          </Grid>
+        </Box>
+      )}
+
+      {_id && (
+        <Player
+          _id={_id}
+          setId={setId}
+          setIsFull={setIsFull}
+          isFull={isFull}
+          windowWidth={window.innerWidth}
+        />
+      )}
     </Box>
   );
 };
