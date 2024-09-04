@@ -41,7 +41,6 @@ const userSchema = new Schema(
     banned: {
       type: Schema.Types.Boolean,
       default: false,
-      required: true,
     },
     like: [
       {

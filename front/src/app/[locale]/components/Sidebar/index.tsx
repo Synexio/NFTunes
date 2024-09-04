@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Box, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
+import {Box, Button, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -11,16 +11,47 @@ import logo from "@public/drawing.png";
 import Link from "next/link";
 import {ConnectButton, useActiveAccount} from "thirdweb/react";
 import {client} from "../../client";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useUserRole} from "../../context/checkRole";
 import {usePathname} from "@/navigation";
+import axios from "axios";
 
 const Sidebar = () => {
     const account = useActiveAccount();
     const {isAdmin, isArtist, walletAddress} = useUserRole(account);
 
     const pathname = usePathname();
+    const api = process.env.NEXT_PUBLIC_API_URL;
+
+    async function addUser(address: string){
+        console.log(address);
+
+        const response = await fetch("http://localhost:3001/user/create", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "address": address
+            })
+        });
+        console.log("reponse post :", response);
+    }
+
+    async function handleAuth(address: string) {
+        if (!address) {
+            toast.error("Address is required.");
+            return;
+        }
+
+        const response = await axios.get(`${api}/user/${address}`);
+        console.log("reponse get :", response);
+
+        if (!response.data) {
+            await addUser(address);
+        }
+    }
 
     return (
         <Box
@@ -55,6 +86,7 @@ const Sidebar = () => {
                             title: "Welcome to NFTunes",
                             showThirdwebBranding: false,
                         }}
+                        onConnect={(wallet) => {addUser(wallet.getAccount()?.address!)}}
                     />
                 </ListItem>
 
@@ -169,6 +201,8 @@ const Sidebar = () => {
 
             <ToastContainer/>
         </Box>
+
+
     );
 };
 

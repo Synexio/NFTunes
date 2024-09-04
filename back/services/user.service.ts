@@ -123,6 +123,17 @@ export class UserService {
       return null;
     }
   }
+
+  async getUserByAddress(address: string): Promise<UserDocument | null> {
+    if (typeof (address) !== "string") {
+      return null;
+    }
+    const user = await UserModel.findOne({ address });
+    if (user === null) {
+      return null;
+    }
+    return user;
+  }
 }
 
 export interface UserCreate {

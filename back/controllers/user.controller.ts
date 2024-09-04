@@ -77,6 +77,7 @@ export class UserController {
     }
     res.json(result);
   }
+
   async searchUsers(req: Request, res: Response): Promise<void> {
     const limit = req.query.limit
       ? Number.parseInt(req.query.limit as string)
@@ -129,6 +130,16 @@ export class UserController {
     }
   }
 
+  async getUserByAddress(req: express.Request, res: express.Response) {
+    const address = req.params.address;
+      const result = await UserService.getInstance().getUserByAddress(address);
+    if (result === null) {
+      res.status(404).end();
+      return;
+    }
+    res.json(result);
+  }
+
   buildRouter(): Router {
     const router = Router();
     router.get("/", this.getAllUsers.bind(this));
@@ -137,6 +148,7 @@ export class UserController {
     router.post("/create", this.createUser.bind(this));
     router.patch("/update/:id", this.updateUser.bind(this));
     router.delete("/:id", this.deleteUser.bind(this));
+    router.get("/:address", this.getUserByAddress.bind(this));
     router.get("/:id", this.getUserById.bind(this));
 
     return router;
