@@ -31,13 +31,12 @@ const Register: React.FC = () => {
         body: JSON.stringify(artistData),
       });
       if (responseArtist.ok) {
-        const createdArtist = await responseArtist.json();
         const userData = {
           address: account?.address as string,
           lastname: lastname,
           firstname: firstname,
           email: email,
-          role: createdArtist._id,
+          role: "artist",
         };
         const urlUser = `${api}/user/create`;
 
