@@ -14,14 +14,14 @@ import {client} from "../../client";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useUserRole} from "../../context/checkRole";
+import {usePathname} from "@/navigation";
 
-interface SidebarProps {
-    setActivePage: (page: "home") => void;
-}
-
-const Sidebar = ({setActivePage}: SidebarProps) => {
+const Sidebar = () => {
     const account = useActiveAccount();
     const {isAdmin, isArtist, walletAddress} = useUserRole(account);
+
+    const pathname = usePathname();
+
     return (
         <Box
             sx={{
@@ -42,7 +42,7 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
 
             {/* Navigation List */}
             <List>
-                <ListItem onClick={() => setActivePage("home")}>
+                <ListItem>
                     <ConnectButton
                         client={client}
                         appMetadata={{
@@ -60,13 +60,13 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
 
                 {/* Home Link */}
                 <Link href="/home" passHref>
-                    <ListItem onClick={() => setActivePage("home")}>
+                    <ListItem>
                         <ListItemIcon>
-                            <HomeIcon sx={{color: "white"}}/>
+                            <HomeIcon sx={{ color: pathname.includes("home") ? "white" : "#b3b3b3" }} />
                         </ListItemIcon>
                         <ListItemText
                             primary="Home"
-                            primaryTypographyProps={{color: "white"}}
+                            primaryTypographyProps={{ color: pathname.includes("home") ? "white" : "#b3b3b3" }}
                         />
                     </ListItem>
                 </Link>
@@ -75,11 +75,11 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
                 <Link href="/search" passHref>
                     <ListItem>
                         <ListItemIcon>
-                            <SearchIcon sx={{color: "#b3b3b3"}}/>
+                            <SearchIcon sx={{ color: pathname.includes("search") ? "white" : "#b3b3b3" }} />
                         </ListItemIcon>
                         <ListItemText
                             primary="Search"
-                            primaryTypographyProps={{color: "#b3b3b3"}}
+                            primaryTypographyProps={{ color: pathname.includes("search") ? "white" : "#b3b3b3" }}
                         />
                     </ListItem>
                 </Link>
@@ -88,11 +88,11 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
                         <Link href="/subscription" passHref>
                             <ListItem>
                                 <ListItemIcon>
-                                    <FavoriteIcon sx={{color: "#b3b3b3"}}/>
+                                    <FavoriteIcon sx={{ color: pathname.includes("subscription") ? "white" : "#b3b3b3" }} />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary="Subscribe"
-                                    primaryTypographyProps={{color: "#b3b3b3"}}
+                                    primaryTypographyProps={{ color: pathname.includes("subscription") ? "white" : "#b3b3b3" }}
                                 />
                             </ListItem>
                         </Link>
@@ -101,11 +101,11 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
                             <Link href="/profile/artist/register" passHref>
                                 <ListItem>
                                     <ListItemIcon>
-                                        <LibraryAddIcon sx={{color: "#b3b3b3"}}/>
+                                        <LibraryAddIcon sx={{ color: pathname.includes("register") ? "white" : "#b3b3b3" }} />
                                     </ListItemIcon>
                                     <ListItemText
                                         primary="I'm a talented ARTIST ⭐️"
-                                        primaryTypographyProps={{color: "#b3b3b3"}}
+                                        primaryTypographyProps={{ color: pathname.includes("register") ? "white" : "#b3b3b3" }}
                                     />
                                 </ListItem>
                             </Link>
@@ -118,22 +118,22 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
                         <Link href="/profile/artist/createAlbum" passHref>
                             <ListItem>
                                 <ListItemIcon>
-                                    <AddIcon sx={{color: "#b3b3b3"}}/>
+                                    <AddIcon sx={{ color: pathname.includes("createAlbum") ? "white" : "#b3b3b3" }} />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary="Add Album"
-                                    primaryTypographyProps={{color: "#b3b3b3"}}
+                                    primaryTypographyProps={{ color: pathname.includes("createAlbum") ? "white" : "#b3b3b3" }}
                                 />
                             </ListItem>
                         </Link>
                         <Link href="/profile/artist/createSong" passHref>
                             <ListItem>
                                 <ListItemIcon>
-                                    <AddIcon sx={{color: "#b3b3b3"}}/>
+                                    <AddIcon sx={{ color: pathname.includes("createSong") ? "white" : "#b3b3b3" }} />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary="Add Song"
-                                    primaryTypographyProps={{color: "#b3b3b3"}}
+                                    primaryTypographyProps={{ color: pathname.includes("createSong") ? "white" : "#b3b3b3" }}
                                 />
                             </ListItem>
                         </Link>
@@ -144,22 +144,22 @@ const Sidebar = ({setActivePage}: SidebarProps) => {
                         <Link href="/profile/admin/addAdmin" passHref>
                             <ListItem>
                                 <ListItemIcon>
-                                    <AddIcon sx={{color: "#b3b3b3"}}/>
+                                    <AddIcon sx={{ color: pathname.includes("addAdmin") ? "white" : "#b3b3b3" }} />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary="Add Admin"
-                                    primaryTypographyProps={{color: "#b3b3b3"}}
+                                    primaryTypographyProps={{ color: pathname.includes("addAdmin") ? "white" : "#b3b3b3" }}
                                 />
                             </ListItem>
                         </Link>
                         <Link href="/profile/admin/listArtist" passHref>
                             <ListItem>
                                 <ListItemIcon>
-                                    <FormatListBulletedIcon sx={{color: "#b3b3b3"}}/>
+                                    <FormatListBulletedIcon sx={{ color: pathname.includes("listArtist") ? "white" : "#b3b3b3" }} />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary="Artists"
-                                    primaryTypographyProps={{color: "#b3b3b3"}}
+                                    primaryTypographyProps={{ color: pathname.includes("listArtist") ? "white" : "#b3b3b3" }}
                                 />
                             </ListItem>
                         </Link>
